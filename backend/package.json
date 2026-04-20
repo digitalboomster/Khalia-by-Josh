@@ -11,9 +11,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "migrate:latest": "knex migrate:latest",
-    "migrate:rollback": "knex migrate:rollback",
-    "seed": "knex seed:run",
+    "migrate:latest": "node --loader ts-node/esm node_modules/.bin/knex migrate:latest",
+    "migrate:rollback": "node --loader ts-node/esm node_modules/.bin/knex migrate:rollback",
+    "migrate:make": "node --loader ts-node/esm node_modules/.bin/knex migrate:make",
+    "seed": "node --loader ts-node/esm node_modules/.bin/knex seed:run",
     "lint": "eslint src --ext .ts",
     "type-check": "tsc --noEmit"
   },

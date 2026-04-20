@@ -11,7 +11,7 @@ import authMiddleware from '@middleware/auth';
 import auditLoggingMiddleware from '@middleware/auditLog';
 
 // Routes (to be implemented)
-// import authRoutes from '@routes/auth';
+import authRoutes from '@routes/auth';
 // import walletRoutes from '@routes/wallet';
 // import groupRoutes from '@routes/groups';
 // import contributionRoutes from '@routes/contributions';
@@ -103,31 +103,8 @@ app.get('/health', (req: RequestWithId, res: Response) => {
  * API Routes
  */
 
-// Public routes (no auth required)
-app.post('/api/v1/auth/register', (req: RequestWithId, res: Response) => {
-  res.status(501).json({
-    success: false,
-    error: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'Authentication routes not yet implemented',
-    },
-    requestId: req.id,
-  });
-});
-
-app.post('/api/v1/auth/login', (req: RequestWithId, res: Response) => {
-  res.status(501).json({
-    success: false,
-    error: {
-      code: 'NOT_IMPLEMENTED',
-      message: 'Authentication routes not yet implemented',
-    },
-    requestId: req.id,
-  });
-});
-
-// TODO: Mount auth routes
-// app.use('/api/v1/auth', authRoutes);
+// Public auth routes (no auth required)
+app.use('/api/v1/auth', authRoutes);
 
 // Protected routes (require auth token)
 app.use('/api/v1/', authMiddleware);
