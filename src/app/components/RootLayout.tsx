@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router";
+import { Outlet, Link, useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   Users,
@@ -13,16 +13,18 @@ import {
   Bell,
   Flame,
   ChevronRight,
+  LogOut,
+  Settings,
+  Shield,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { cn } from "./ui/utils";
-import { currentUser, proactiveInsights } from "../data/mockData";
+import { useAuth } from "../context/AuthContext";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Capital Intelligence", href: "/capital-intelligence", icon: TrendingUp },
   { name: "Groups", href: "/groups", icon: Users },
   { name: "Marketplace", href: "/marketplace", icon: Store },
   { name: "ShūrāBot", href: "/shurabot", icon: Sparkles, badge: "AI" },
@@ -32,8 +34,24 @@ const navigation = [
 
 export function RootLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const unreadInsights = proactiveInsights.length;
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/auth/login");
+  };
+
+  if (!user) {
+    return <Outlet />;
+  }
+
+  const userInitial = user.first_name?.[0] || user.email?.[0] || 'U';
+  const userName = user.first_name && user.last_name 
+    ? `${user.first_name} ${user.last_name}` 
+    : user.email;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -67,19 +85,16 @@ export function RootLayout() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-white pt-16 overflow-y-auto">
+        <div className="lg:hidden fixed inset-0 z-40 bg-white pt-16 overflow-y-auto pb-20">
           {/* User Card */}
           <div className="px-4 py-4 border-b border-gray-100">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white font-semibold">
-                {currentUser.name.charAt(0)}
+                {userInitial}
               </div>
-              <div>
-                <div className="font-semibold text-gray-900">{currentUser.name}</div>
-                <div className="text-xs text-gray-500 flex items-center gap-1.5">
-                  <Flame className="w-3 h-3 text-orange-500" />
-                  {currentUser.contributionStreak}-month streak
-                </div>
+              <div className="flex-1">
+                <div className="font-semibold text-gray-900">{userName}</div>
+                <div className="text-xs text-gray-500">KYC Level {user.kyc_level}</div>
               </div>
             </div>
           </div>
@@ -104,13 +119,20 @@ export function RootLayout() {
                   {item.badge && (
                     <Badge className="text-[10px] bg-emerald-100 text-emerald-700 border-0 h-4">{item.badge}</Badge>
                   )}
-                  {item.href === "/shurabot" && (
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  )}
                 </Link>
               );
             })}
           </nav>
+          <div className="px-4 py-4 border-t border-gray-100 mt-auto">
+            <Button 
+              onClick={handleLogout}
+              className="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200"
+              variant="outline"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
       )}
 
@@ -133,15 +155,13 @@ export function RootLayout() {
         <div className="px-4 py-3 border-b border-gray-100">
           <Link to="/profile" className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition-colors group">
             <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white font-semibold flex-shrink-0">
-              {currentUser.name.charAt(0)}
+              {userInitial}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="font-medium text-sm text-gray-900 truncate">{currentUser.name}</div>
+              <div className="font-medium text-sm text-gray-900 truncate">{userName}</div>
               <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                <Flame className="w-3 h-3 text-orange-500" />
-                <span className="text-orange-600">{currentUser.contributionStreak}mo streak</span>
-                <span>·</span>
-                <span>{currentUser.wellnessScore}% health</span>
+                <Shield className="w-3 h-3" />
+                <span>KYC Level {user.kyc_level}</span>
               </div>
             </div>
             <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 flex-shrink-0" />
@@ -170,40 +190,25 @@ export function RootLayout() {
                 {item.badge && (
                   <Badge className="text-[10px] bg-emerald-100 text-emerald-700 border-0 h-4 px-1.5">{item.badge}</Badge>
                 )}
-                {item.href === "/shurabot" && !isActive && (
-                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                )}
               </Link>
             );
           })}
         </nav>
 
-        {/* ShūrāBot Insight Banner */}
-        {unreadInsights > 0 && (
-          <div className="px-3 py-3 border-t border-gray-100">
-            <Link to="/shurabot">
-              <div className="flex items-start gap-2.5 p-3 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors cursor-pointer">
-                <Bell className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-emerald-800">
-                    {unreadInsights} new insight{unreadInsights > 1 ? "s" : ""} from ShūrāBot
-                  </div>
-                  <p className="text-[10px] text-emerald-700 truncate mt-0.5">
-                    {proactiveInsights[0]?.title}
-                  </p>
-                </div>
-              </div>
-            </Link>
+        {/* Footer with Logout */}
+        <div className="px-4 py-3 border-t border-gray-100 space-y-2">
+          <Button 
+            onClick={handleLogout}
+            className="w-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 justify-start"
+            variant="outline"
+            size="sm"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Sign Out
+          </Button>
+          <div className="text-xs text-gray-400 text-center pt-2 border-t border-gray-100">
+            © 2026 Khalia
           </div>
-        )}
-
-        {/* Footer */}
-        <div className="px-4 py-3 border-t border-gray-100">
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-            <div className="text-xs text-gray-400">Shariah-Compliant Platform</div>
-          </div>
-          <div className="text-xs text-gray-400 mt-0.5">© 2026 Khalia · All rights reserved</div>
         </div>
       </aside>
 
