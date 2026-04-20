@@ -92,7 +92,7 @@ class GroupsService {
     total_collected: number;
     suggested: boolean;
   }> {
-    return apiClient.request('get', `/groups/${groupId}/payout-info');
+    return apiClient.request('get', `/groups/${groupId}/payout-info`);
   }
 }
 
