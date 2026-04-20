@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
@@ -5,13 +6,18 @@ import { Progress } from "../components/ui/progress";
 import {
   ArrowUpRight, ArrowDownRight, Calendar, TrendingUp, Users,
   DollarSign, AlertCircle, Flame, Sparkles, Shield, Star,
-  Bell, CheckCircle2, ChevronRight, Zap,
+  Bell, CheckCircle2, ChevronRight, Zap, Loader,
 } from "lucide-react";
 import { Link } from "react-router";
+import { useAuth } from '../context/AuthContext';
+import walletService, { WalletBalance } from '../services/wallet';
+import groupsService, { Group } from '../services/groups';
+import kycService, { KYCStatus } from '../services/kyc';
+import userService, { TrustScoreBreakdown } from '../services/user';
 import {
-  currentUser, walletBalance, userGroups, recentTransactions,
-  performanceData, proactiveInsights,
-} from "../data/mockData";
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, Legend,
+} from "recharts";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
@@ -160,21 +166,90 @@ function GroupHealthCard({ group }: { group: typeof userGroups[0] }) {
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export function Dashboard() {
-  const upcomingPayouts = userGroups.filter((g) => new Date(g.nextPayout) > new Date());
-  const nextPayout = upcomingPayouts.sort(
-    (a, b) => new Date(a.nextPayout).getTime() - new Date(b.nextPayout).getTime()
-  )[0];
-  const totalGroupContributions = userGroups.reduce((sum, g) => sum + g.totalPool, 0);
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const allActivity = userGroups
-    .flatMap((g) => g.activityFeed ?? [])
-    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-    .slice(0, 6);
+  // State for fetched data
+  const [walletBalance, setWalletBalance] = useState<WalletBalance | null>(null);
+  const [userGroups, setUserGroups] = useState<Group[]>([]);
+  const [kycStatus, setKycStatus] = useState<KYCStatus | null>(null);
+  const [trustScore, setTrustScore] = useState<TrustScoreBreakdown | null>(null);
+
+  // Fetch all dashboard data on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [balance, groups, kyc, trust] = await Promise.all([
+          walletService.getBalance(),
+          groupsService.listUserGroups(),
+          kycService.getKYCStatus(),
+          userService.getTrustScoreBreakdown(),
+        ]);
+        setWalletBalance(balance);
+        setUserGroups(groups);
+        setKycStatus(kyc);
+        setTrustScore(trust);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load dashboard');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader className="w-8 h-8 animate-spin mx-auto mb-4" />
+          <p>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 text-red-600">
+              <AlertCircle className="w-5 h-5" />
+              <p>{error}</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  
+  // Mock performance data
+  const performanceData = [
+    { month: 'Jan', value: 45000, benchmark: 40000 },
+    { month: 'Feb', value: 52000, benchmark: 42000 },
+    { month: 'Mar', value: 58000, benchmark: 45000 },
+    { month: 'Apr', value: 65000, benchmark: 48000 },
+    { month: 'May', value: 75000, benchmark: 50000 },
+  ];
 
-  const topInsight = proactiveInsights[0];
+  // Mock activity feed data
+  const allActivity = [
+    { id: '1', type: 'contribution', message: 'You contributed ₦50,000 to Lagos Tech Circle', timestamp: new Date(Date.now() - 86400000).toISOString() },
+    { id: '2', type: 'payout', message: 'You received payout of ₦150,000 from Green Energy Pool', timestamp: new Date(Date.now() - 172800000).toISOString() },
+  ];
+
+  // Mock recent transactions
+  const recentTransactions = [
+    { id: '1', type: 'contribution', amount: 50000, groupName: 'Lagos Tech Circle', date: new Date(Date.now() - 86400000) },
+    { id: '2', type: 'deposit', amount: 100000, groupName: undefined, date: new Date(Date.now() - 172800000) },
+    { id: '3', type: 'payout', amount: 150000, groupName: 'Green Energy Pool', date: new Date(Date.now() - 259200000) },
+  ];
 
   return (
     <div className="p-4 lg:p-8 space-y-6">
