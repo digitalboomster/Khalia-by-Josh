@@ -79,4 +79,6 @@ class KYCService {
   }
 }
 
-export default new KYCService();
+const kycService = new KYCService();
+export { kycService };
+export default kycService;
