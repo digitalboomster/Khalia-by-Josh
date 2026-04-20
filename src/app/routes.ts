@@ -15,6 +15,7 @@ import { Contribute } from "./pages/Contribute";
 import { NotFound } from "./pages/NotFound";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
+import OnboardingPage from "./pages/OnboardingPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 export const router = createBrowserRouter([
@@ -26,6 +27,15 @@ export const router = createBrowserRouter([
   {
     path: "/auth/register",
     Component: RegisterPage,
+  },
+  // Onboarding (Requires auth but not full KYC)
+  {
+    path: "/onboarding",
+    Component: () => (
+      <ProtectedRoute>
+        <OnboardingPage />
+      </ProtectedRoute>
+    ),
   },
   // Protected Routes
   {
