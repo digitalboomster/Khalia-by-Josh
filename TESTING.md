@@ -54,6 +54,7 @@ cp .env.example .env
 ```
 
 **Edit `backend/.env`:**
+
 ```env
 # Database
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/khalia_dev
@@ -102,6 +103,7 @@ npm run dev
 ```
 
 **Verify backend is running:**
+
 ```bash
 curl http://localhost:3000/health
 ```
@@ -292,6 +294,7 @@ npm run test:watch
 ```
 
 **Expected output:**
+
 ```
 ✓ Auth tests (register, login)
 ✓ KYC tests (BVN, biometric, bank)
@@ -406,12 +409,14 @@ CORS_ORIGIN=http://localhost:5173
 ## Performance Benchmarks
 
 **Expected Response Times:**
+
 - Authentication: < 200ms
 - Wallet Balance: < 100ms
 - Groups List: < 150ms
 - KYC Verification: < 500ms (external API calls)
 
 **Database Indexes:**
+
 ```
 ✓ users.email (unique)
 ✓ transactions.user_id

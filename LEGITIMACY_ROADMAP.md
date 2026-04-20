@@ -1,4 +1,5 @@
 # Khalia Legitimacy Roadmap
+
 ## From UI Prototype → Production-Grade Fintech Platform
 
 **Created:** April 20, 2026  
@@ -24,6 +25,7 @@ This document breaks down all these dimensions and ranks them by criticality.
 ## Dimension 1: Financial Infrastructure (CRITICAL)
 
 ### What You Have Now
+
 - UI forms for deposits, withdrawals, payout tracking
 - Mock data in TypeScript files
 - No actual money movement
@@ -33,16 +35,16 @@ This document breaks down all these dimensions and ranks them by criticality.
 
 #### Core Banking <span style="color: red;">[MVPL: Must-Have Pre-Launch]</span>
 
-| Requirement | Why Critical | Current Status | MVP Timeline |
-|---|---|---|---|
-| **Payment Gateway Integration** | Users can't fund wallet without real payment processor | ❌ None | Week 2-3 |
-| | Recommendations: Paystack, Flutterwave, or Remita (Lagos-based, NGN specialist) | - | - |
-| **Bank Settlement** | Payouts must reach actual bank accounts | ❌ None | Week 2-3 |
-| | Requires NACCS API (Nigerians Account Management) or Open Banking | - | - |
-| **Escrow Account** | Funds held securely between contribution and payout | ❌ Mock only | Week 4-5 |
-| | Must be registered with Central Bank of Nigeria (CBN) | - | - |
-| **Multi-Currency Support** | NGN (primary), USD, GBP for diaspora transfers | ⚠️ NGN only | Phase 2 |
-| **Compliance Reporting** | Automated NAIRA flow reporting to financial authorities | ❌ None | Week 1-2 |
+| Requirement                     | Why Critical                                                                    | Current Status | MVP Timeline |
+| ------------------------------- | ------------------------------------------------------------------------------- | -------------- | ------------ |
+| **Payment Gateway Integration** | Users can't fund wallet without real payment processor                          | ❌ None        | Week 2-3     |
+|                                 | Recommendations: Paystack, Flutterwave, or Remita (Lagos-based, NGN specialist) | -              | -            |
+| **Bank Settlement**             | Payouts must reach actual bank accounts                                         | ❌ None        | Week 2-3     |
+|                                 | Requires NACCS API (Nigerians Account Management) or Open Banking               | -              | -            |
+| **Escrow Account**              | Funds held securely between contribution and payout                             | ❌ Mock only   | Week 4-5     |
+|                                 | Must be registered with Central Bank of Nigeria (CBN)                           | -              | -            |
+| **Multi-Currency Support**      | NGN (primary), USD, GBP for diaspora transfers                                  | ⚠️ NGN only    | Phase 2      |
+| **Compliance Reporting**        | Automated NAIRA flow reporting to financial authorities                         | ❌ None        | Week 1-2     |
 
 #### Ledger & Accounting <span style="color: red;">[MVPL]</span>
 
@@ -52,14 +54,14 @@ This document breaks down all these dimensions and ranks them by criticality.
 interface LedgerEntry {
   id: string;
   timestamp: Date;
-  debit?: number;      // Money in
-  credit?: number;     // Money out
-  balance: number;     // Running total
-  reference: string;   // Audit trail
+  debit?: number; // Money in
+  credit?: number; // Money out
+  balance: number; // Running total
+  reference: string; // Audit trail
   userId: string;
   groupId?: string;
-  type: 'deposit' | 'contribution' | 'payout' | 'withdrawal' | 'fee';
-  status: 'pending' | 'confirmed' | 'settled';
+  type: "deposit" | "contribution" | "payout" | "withdrawal" | "fee";
+  status: "pending" | "confirmed" | "settled";
   approvedBy?: string; // Admin approval
 }
 
@@ -67,6 +69,7 @@ interface LedgerEntry {
 ```
 
 **What This Means:**
+
 - Every ₦1 must be tracked in real-time
 - Reconciliation must be automatic (daily, hourly)
 - Audit trail must be immutable
@@ -74,19 +77,20 @@ interface LedgerEntry {
 
 #### Transaction Limits & Risk <span style="color: orange;">[MVP Important]</span>
 
-| Control | Why | Current |
-|---------|-----|---------|
-| Daily deposit limit (e.g., ₦500K) | AML/fraud prevention | ❌ |
-| Monthly withdrawal limit (tiered by trust score) | Account security | ❌ |
-| Transaction step-up verification (amounts >₦1M require OTP + email) | Account compromise protection | ❌ |
-| Daily transaction velocity checks | Wash trading/fraud detection | ❌ |
+| Control                                                             | Why                           | Current |
+| ------------------------------------------------------------------- | ----------------------------- | ------- |
+| Daily deposit limit (e.g., ₦500K)                                   | AML/fraud prevention          | ❌      |
+| Monthly withdrawal limit (tiered by trust score)                    | Account security              | ❌      |
+| Transaction step-up verification (amounts >₦1M require OTP + email) | Account compromise protection | ❌      |
+| Daily transaction velocity checks                                   | Wash trading/fraud detection  | ❌      |
 
 ---
 
 ## Dimension 2: Legal & Compliance (CRITICAL)
 
 ### What You Have Now
-- UI that *looks* legitimate
+
+- UI that _looks_ legitimate
 - No legal agreements
 - No regulatory filings
 - Mock KYC (no government ID verification)
@@ -96,33 +100,35 @@ interface LedgerEntry {
 #### KYC/AML Framework <span style="color: red;">[MVPL]</span>
 
 **You MUST comply with:**
+
 - **CBN Requirements** (Central Bank of Nigeria)
+
   - Know Your Customer (KYC) Level 1 (basic), Level 2 (enhanced)
   - AML (Anti-Money Laundering) screening
   - Sanctions list checking (UN, OFAC, Nigerian list)
-  
+
 - **Implementation Requirements:**
   ```
   1. BVN Integration
      - Real-time BVN verification (not mock)
      - Must call NIBSS or licensed BVN provider
      - Stores hash only (not raw BVN)
-     
+
   2. Government ID Verification
      - NIN (National ID) + facial recognition
      - Biometric matching to government database
      - Provider: NIMC or licensed partner
-     
+
   3. Bank Account Verification
      - Account holder name match (Naira)
      - Account status check (active, not compromised)
      - Integration: NIBSS Open Banking or direct bank APIs
-     
+
   4. Enhanced Due Diligence (EDD)
      - For transactions >₦5M
      - Manual review by compliance team
      - Documentation of source of funds
-     
+
   5. Suspicious Activity Reporting (SAR)
      - Automated flagging of unusual patterns
      - Manual escalation to compliance
@@ -134,12 +140,14 @@ interface LedgerEntry {
 **Must Have:**
 
 1. **Terms of Service**
+
    - User rights & responsibilities
    - Prohibited use (money laundering, sanctions evasion, fraud)
    - Dispute resolution clause
    - Governing law (Nigerian, with English language precedent)
 
 2. **Privacy Policy**
+
    - What data you collect (BVN, biometric, financial transactions)
    - How long you store it (7 years for financial records)
    - Third-party sharing (payment processors, audit firms)
@@ -147,6 +155,7 @@ interface LedgerEntry {
    - Compliance: Nigeria Data Protection Regulation (NDPR)
 
 3. **Group Agreement Template**
+
    - Binding digital contract for each group
    - Payout order terms
    - Dispute resolution within group
@@ -154,6 +163,7 @@ interface LedgerEntry {
    - E-signature required (digital certificate)
 
 4. **Payment Terms**
+
    - Clear fee disclosure (transaction fees, monthly fees, etc.)
    - Chargeback policy
    - Refund policy (deposits, contributions, payouts)
@@ -165,25 +175,26 @@ interface LedgerEntry {
 
 #### Regulatory Compliance <span style="color: red;">[MVPL]</span>
 
-| Regulation | Requirement | Your Status | Timeline |
-|---|---|---|---|
-| **CBN Money Services Operator License** | Required if you're moving customer money | ❌ Not filed | Weeks 1-4 |
-| | Process: Formal application to CBN Financial Infrastructure Department | - | - |
-| **Tax Registration (FIRS)** | Business tax ID required | ⚠️ Needs verification | Week 1 |
-| | For fees collected: VAT (7.5%) on services | - | - |
-| **Data Protection (NDPR)** | Comply with Nigeria Data Protection Regulation | ⚠️ Partial | Weeks 2-4 |
-| | Must register data controller, publish privacy policy | - | - |
-| **Anti-Corruption (UNCAC)** | No kickbacks, anti-bribery policy | ✅ N/A | - |
-| | Disclosures required if shareholder is PEP (politically exposed person) | - | - |
+| Regulation                              | Requirement                                                             | Your Status           | Timeline  |
+| --------------------------------------- | ----------------------------------------------------------------------- | --------------------- | --------- |
+| **CBN Money Services Operator License** | Required if you're moving customer money                                | ❌ Not filed          | Weeks 1-4 |
+|                                         | Process: Formal application to CBN Financial Infrastructure Department  | -                     | -         |
+| **Tax Registration (FIRS)**             | Business tax ID required                                                | ⚠️ Needs verification | Week 1    |
+|                                         | For fees collected: VAT (7.5%) on services                              | -                     | -         |
+| **Data Protection (NDPR)**              | Comply with Nigeria Data Protection Regulation                          | ⚠️ Partial            | Weeks 2-4 |
+|                                         | Must register data controller, publish privacy policy                   | -                     | -         |
+| **Anti-Corruption (UNCAC)**             | No kickbacks, anti-bribery policy                                       | ✅ N/A                | -         |
+|                                         | Disclosures required if shareholder is PEP (politically exposed person) | -                     | -         |
 
 #### Insurance <span style="color: orange;">[MVP Important]</span>
 
 **Critical Coverage:**
-- **E&O (Errors & Omissions):** $1-5M coverage for financial services
+
+- **E&O (Errors & Omissions):** \$1-5M coverage for financial services
   - Covers: software bugs, operational errors, professional negligence
-- **Cyber Liability:** $2-10M
+- **Cyber Liability:** \$2-10M
   - Covers: data breaches, ransomware, business interruption
-- **Fidelity Coverage:** $ on-device fraud/embezzlement
+- **Fidelity Coverage:** \$ on-device fraud/embezzlement
 - **D&O (Directors & Officers):** Protects leadership from personal liability
 
 ---
@@ -191,6 +202,7 @@ interface LedgerEntry {
 ## Dimension 3: Trust & Security (CRITICAL)
 
 ### What You Have Now
+
 - Client-side form validation
 - Mock authentication (hardcoded currentUser)
 - No encryption at rest or in transit
@@ -221,6 +233,7 @@ Authentication Flow:
 ```
 
 **Requirements:**
+
 - ✅ TLS 1.3 for all traffic
 - ✅ Password strength: 12+ chars, upper + lower + number + symbol
 - ✅ Rate limiting: 5 login attempts → 15-min lockout
@@ -233,6 +246,7 @@ Authentication Flow:
 **In Transit:** TLS 1.3 (automatic if using HTTPS)
 
 **At Rest:**
+
 - User passwords: bcrypt (not SHA, not plaintext)
 - Biometric data: Salted SHA-256 (stored locally, not transmitted to server)
 - BVN/NIN: Tokenized (stored as encrypted reference, not raw value)
@@ -240,6 +254,7 @@ Authentication Flow:
 - PII (name, phone, email): Encrypted at rest in database
 
 **API Keys & Secrets:**
+
 - Never committed to Git
 - Stored in environment variables or secrets manager (AWS Secrets Manager, Vault)
 - Rotated every 90 days
@@ -250,14 +265,20 @@ Authentication Flow:
 interface AuditLog {
   timestamp: Date;
   userId: string;
-  action: 'login' | 'deposit' | 'contribution' | 'payout' | 'payout_approval' | 'admin_override';
-  resource: string;           // What was affected (groupId, transactionId)
+  action:
+    | "login"
+    | "deposit"
+    | "contribution"
+    | "payout"
+    | "payout_approval"
+    | "admin_override";
+  resource: string; // What was affected (groupId, transactionId)
   before?: Record<string, any>; // State before
-  after?: Record<string, any>;  // State after
+  after?: Record<string, any>; // State after
   ipAddress: string;
   userAgent: string;
-  status: 'success' | 'failure';
-  reason?: string;              // If failure
+  status: "success" | "failure";
+  reason?: string; // If failure
 }
 
 // Required for every financial transaction
@@ -266,6 +287,7 @@ interface AuditLog {
 ```
 
 **What Must Be Logged:**
+
 - ✅ All login attempts (success & failure)
 - ✅ All financial transactions (deposits, contributions, payouts)
 - ✅ All administrative actions (member approvals, rule changes)
@@ -275,6 +297,7 @@ interface AuditLog {
 #### Fraud Detection <span style="color: orange;">[MVP Important]</span>
 
 **Automated Rules:**
+
 - Same user depositing multiple times in <5 min → Flag
 - Transaction >3x user's average recent transaction → Flag
 - Withdrawal within <24 hours of first deposit → Flag
@@ -282,6 +305,7 @@ interface AuditLog {
 - User account accessing unusual geography → Flag (real-time location checks)
 
 **Response:**
+
 - Low risk: Allow, monitor
 - Medium risk: Step-up verification (OTP, biometric re-confirmation)
 - High risk: Hold transaction, manual review, possible account lockdown
@@ -291,6 +315,7 @@ interface AuditLog {
 ## Dimension 4: Product Maturity (IMPORTANT)
 
 ### What You Have Now
+
 - 13 pages implemented
 - All components styled
 - No backend integration
@@ -301,16 +326,20 @@ interface AuditLog {
 #### Error Handling <span style="color: orange;">[MVP]</span>
 
 **Types of Errors:**
+
 1. **User Errors** (input validation)
+
    - "Amount must be ≥₦100"
    - "Email already registered"
    - **Response:** In-form message, red highlight, actionable fix
 
 2. **Network Errors** (offline, slow connection)
+
    - Deposit initiated but gateway timeout
    - **Response:** "Connection lost. Retry? Your deposit is still pending."
 
 3. **Server Errors** (bug, database down)
+
    - Payout failed: "We're experiencing issues. Please contact support (ID: ERR-2026-04-20-xyz)"
    - **Response:** Error ID for support, no technical jargon to user
 
@@ -345,6 +374,7 @@ interface AuditLog {
 ## Dimension 5: Operations (IMPORTANT)
 
 ### What You Have Now
+
 - No monitoring
 - No support infrastructure
 - No incident response plan
@@ -354,17 +384,20 @@ interface AuditLog {
 #### Monitoring & Alerting <span style="color: orange;">[MVP]</span>
 
 **Uptime:**
+
 - Target: 99.9% (allow 43 min downtime/month)
 - Monitor: API health checks every 1 min
 - Alert: Auto-notification to engineering if > 5 min downtime
 - Dashboard: Public status page (status.khalia.com)
 
 **Error Rates:**
+
 - Alert if error rate >1% on financial transactions
 - Alert if login success rate <95%
 - Alert if payment gateway response time >2s
 
 **Database Health:**
+
 - Monitor: Disk space, query performance, connection pool
 - Alert if >80% disk used (scale before 100%)
 - Alert if slow queries detected (>1s)
@@ -372,12 +405,14 @@ interface AuditLog {
 #### Support Infrastructure <span style="color: orange;">[MVP]</span>
 
 **Channels:**
+
 - Email support: support@khalia.com (24-48h SLA)
 - In-app chat/ticketing system (later: WhatsApp, phone)
 - FAQ/Help center (searchable articles)
 - Community forum (user-to-user help)
 
 **Ticketing System:**
+
 - Track all support requests
 - Route to right team (finance, tech, legal)
 - SLA tracking (financial issues first)
@@ -387,14 +422,15 @@ interface AuditLog {
 
 **Incident Levels:**
 
-| Level | Example | Response Time | Resolution Target |
-|-------|---------|---|---|
-| Critical | Payment gateway down (no deposits/withdrawals possible) | 15 min notification | 1 hour |
-| High | Deposit slow but working, data discrepancy flagged | 1 hour | 4 hours |
-| Medium | Non-critical feature bug, minor UI issue | 4 hours | 24 hours |
-| Low | Typo, cosmetic issue, feature request | Next business day | 1 week |
+| Level    | Example                                                 | Response Time       | Resolution Target |
+| -------- | ------------------------------------------------------- | ------------------- | ----------------- |
+| Critical | Payment gateway down (no deposits/withdrawals possible) | 15 min notification | 1 hour            |
+| High     | Deposit slow but working, data discrepancy flagged      | 1 hour              | 4 hours           |
+| Medium   | Non-critical feature bug, minor UI issue                | 4 hours             | 24 hours          |
+| Low      | Typo, cosmetic issue, feature request                   | Next business day   | 1 week            |
 
 **Playbook:**
+
 - Declare incident
 - Notify stakeholders (internal + affected users)
 - Form response team
@@ -415,6 +451,7 @@ interface AuditLog {
 ## Dimension 6: Business Model & Sustainability (IMPORTANT)
 
 ### What You Have Now
+
 - No revenue model defined
 - No cost structure
 - No financial projections
@@ -426,21 +463,25 @@ interface AuditLog {
 **Options:**
 
 1. **Transaction Fees** (Most transparent)
+
    - Deposit fee: 0.5-1% (platform cost)
    - Withdrawal fee: 0.5-1%
    - Monthly platform fee: ₦0-500 (premium tier)
    - Example: User deposits ₦100K → Khalia keeps ₦500-1K
 
 2. **Merchant Services** (B2B)
+
    - Group creators pay for premium features (custom templates, advanced analytics)
    - API access for fintech partners
 
 3. **Float Interest** (Risky in Islamic context)
+
    - Invest idle balances for <24h → earn spread
    - Must be Shariah-compliant (mudaraba, musharaka)
    - Disclose to users
 
 4. **Data & Analytics** (Anonymized, not personal)
+
    - Aggregate insights (monthly savings trends, group performance)
    - Sell to financial institutions for product development
 
@@ -450,14 +491,14 @@ interface AuditLog {
 
 #### Cost Structure <span style="color: orange;">[Phase 1 Planning]</span>
 
-| Cost | Monthly Est. | Notes |
-|------|---|---|
-| **Infrastructure** | ₦200K-500K | AWS/GCP, database, CDN |
-| **Payment Gateway** | 1-2% of transaction volume | Paystack, Flutterwave |
-| **Compliance/Legal** | ₦300K-1M | CBN license, lawyers, auditors |
-| **Support Team** | ₦1-2M | 2-3 FTE for MVP |
-| **Monitoring/Security** | ₦200K-500K | Sentry, Datadog, security tools |
-| **Marketing/Growth** | ₦500K-2M | User acquisition (TBD) |
+| Cost                    | Monthly Est.               | Notes                           |
+| ----------------------- | -------------------------- | ------------------------------- |
+| **Infrastructure**      | ₦200K-500K                 | AWS/GCP, database, CDN          |
+| **Payment Gateway**     | 1-2% of transaction volume | Paystack, Flutterwave           |
+| **Compliance/Legal**    | ₦300K-1M                   | CBN license, lawyers, auditors  |
+| **Support Team**        | ₦1-2M                      | 2-3 FTE for MVP                 |
+| **Monitoring/Security** | ₦200K-500K                 | Sentry, Datadog, security tools |
+| **Marketing/Growth**    | ₦500K-2M                   | User acquisition (TBD)          |
 
 #### Financial Projections <span style="color: orange;">[Phase 1 Planning]</span>
 
@@ -562,14 +603,14 @@ Year 2:
 
 ### Team Needed for MVP (12 weeks)
 
-| Role | FTE | Responsibilities |
-|------|-----|---|
-| **Product Lead** | 1.0 | Roadmap, prioritization, stakeholder management |
-| **Backend Engineer** | 1.5 | Payment gateway, auth, ledger, compliance logic |
-| **Full-Stack Engineer** | 1.0 | API integration, admin tools, monitoring |
-| **QA/Test Engineer** | 0.5 | Test cases, compliance testing, security checks |
-| **Compliance/Legal** | 0.5 | CBN filing, KYC/AML setup, legal docs |
-| **DevOps/Security** | 0.5 | Infrastructure, monitoring, encryption, backups |
+| Role                    | FTE | Responsibilities                                |
+| ----------------------- | --- | ----------------------------------------------- |
+| **Product Lead**        | 1.0 | Roadmap, prioritization, stakeholder management |
+| **Backend Engineer**    | 1.5 | Payment gateway, auth, ledger, compliance logic |
+| **Full-Stack Engineer** | 1.0 | API integration, admin tools, monitoring        |
+| **QA/Test Engineer**    | 0.5 | Test cases, compliance testing, security checks |
+| **Compliance/Legal**    | 0.5 | CBN filing, KYC/AML setup, legal docs           |
+| **DevOps/Security**     | 0.5 | Infrastructure, monitoring, encryption, backups |
 
 **Total: ~5 FTE + contractors for specialized areas (BVN integration, payment gateway, lawyers)**
 
@@ -637,13 +678,13 @@ Year 2:
 
 ## Risk Mitigation
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| CBN license rejection | Medium | Critical (shutdown) | Early engagement, hire experienced compliance officer |
-| Payment gateway outage | Low | High (no transactions) | Backup gateway via different provider |
-| Data breach | Low | Critical (reputational + legal) | Annual security audit, bug bounty program, incident response insurance |
-| Fraud spike | Medium | High (losses, CBN scrutiny) | Robust fraud detection, real-time monitoring, reserve fund |
-| User dispute escalation | Medium | Medium (operational burden) | Clear dispute resolution process, escrow protection, arbitration clause |
+| Risk                    | Likelihood | Impact                          | Mitigation                                                              |
+| ----------------------- | ---------- | ------------------------------- | ----------------------------------------------------------------------- |
+| CBN license rejection   | Medium     | Critical (shutdown)             | Early engagement, hire experienced compliance officer                   |
+| Payment gateway outage  | Low        | High (no transactions)          | Backup gateway via different provider                                   |
+| Data breach             | Low        | Critical (reputational + legal) | Annual security audit, bug bounty program, incident response insurance  |
+| Fraud spike             | Medium     | High (losses, CBN scrutiny)     | Robust fraud detection, real-time monitoring, reserve fund              |
+| User dispute escalation | Medium     | Medium (operational burden)     | Clear dispute resolution process, escrow protection, arbitration clause |
 
 ---
 

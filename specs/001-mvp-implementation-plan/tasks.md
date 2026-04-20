@@ -31,6 +31,7 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 **Goal**: Resolve all critical blocker gates. Document vendor selections, architecture decisions, and regulatory requirements. Output: `research.md`
 
 **Success Criteria**:
+
 - [ ] All payment gateways evaluated and selection decision made
 - [ ] BVN/NIN integration path confirmed with vendor quotes
 - [ ] Bank settlement architecture documented
@@ -41,17 +42,17 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 
 ### Phase 0 Tasks
 
-- [ ] **[T001] [P]** Research payment gateway options (Paystack vs Flutterwave vs Remita) and document API capabilities, cost, settlement time in `specs/001-mvp-implementation-plan/research.md`
+- [ ] **[T001][p]** Research payment gateway options (Paystack vs Flutterwave vs Remita) and document API capabilities, cost, settlement time in `specs/001-mvp-implementation-plan/research.md`
 
-- [ ] **[T002] [P]** Research BVN/NIN verification providers (NIBSS, NIMC, licensed aggregators) and document integration requirements, timelines, costs in `specs/001-mvp-implementation-plan/research.md`
+- [ ] **[T002][p]** Research BVN/NIN verification providers (NIBSS, NIMC, licensed aggregators) and document integration requirements, timelines, costs in `specs/001-mvp-implementation-plan/research.md`
 
-- [ ] **[T003] [P]** Research bank settlement architecture (NACCS API, open banking vs direct integration) and document escrow account requirements in `specs/001-mvp-implementation-plan/research.md`
+- [ ] **[T003][p]** Research bank settlement architecture (NACCS API, open banking vs direct integration) and document escrow account requirements in `specs/001-mvp-implementation-plan/research.md`
 
-- [ ] **[T004] [P]** Research CBN Money Services Operator license requirements, KYC/AML regulations, SAR reporting obligations and document regulatory path in `specs/001-mvp-implementation-plan/research.md`
+- [ ] **[T004][p]** Research CBN Money Services Operator license requirements, KYC/AML regulations, SAR reporting obligations and document regulatory path in `specs/001-mvp-implementation-plan/research.md`
 
-- [ ] **[T005] [P]** Research automated KYC/AML providers and sanctions screening platforms, document vendor options and integration approach in `specs/001-mvp-implementation-plan/research.md`
+- [ ] **[T005][p]** Research automated KYC/AML providers and sanctions screening platforms, document vendor options and integration approach in `specs/001-mvp-implementation-plan/research.md`
 
-- [ ] **[T006] [P]** Research biometric storage, token management, PCI DSS requirements, session management strategies and document security architecture recommendations in `specs/001-mvp-implementation-plan/research.md`
+- [ ] **[T006][p]** Research biometric storage, token management, PCI DSS requirements, session management strategies and document security architecture recommendations in `specs/001-mvp-implementation-plan/research.md`
 
 - [ ] **[T007]** Contact and request quote from selected payment gateway vendor (Paystack or Flutterwave), document sandbox access and integration timeline
 
@@ -78,6 +79,7 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 **Goal**: Complete all design artifacts. Establish API contracts, data models, legal agreements, and developer quickstart. Pre-implementation quality gates.
 
 **Success Criteria**:
+
 - [ ] Data models with all entity schemas and migrations defined
 - [ ] REST API contract (OpenAPI) with 20+ endpoints documented
 - [ ] Group agreement and KYC/AML checklist templates completed
@@ -91,37 +93,37 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 
 - [ ] **[T017]** Design Group entity schema (ID, name, goal, frequency, contribution amount, payout order, creator, Shariah flag, status, next payout date) and document in `specs/001-mvp-implementation-plan/data-model.md`
 
-- [ ] **[T018] [P]** Design Transaction entity (ID, user, group, type, amount, payment method, status, reference, timestamp) and document in `specs/001-mvp-implementation-plan/data-model.md`
+- [ ] **[T018][p]** Design Transaction entity (ID, user, group, type, amount, payment method, status, reference, timestamp) and document in `specs/001-mvp-implementation-plan/data-model.md`
 
-- [ ] **[T019] [P]** Design Contribution entity (ID, user, group, amount, due date, paid date, status) and document in `specs/001-mvp-implementation-plan/data-model.md`
+- [ ] **[T019][p]** Design Contribution entity (ID, user, group, amount, due date, paid date, status) and document in `specs/001-mvp-implementation-plan/data-model.md`
 
-- [ ] **[T020] [P]** Design double-entry LedgerEntry schema (timestamp, debit, credit, balance, reference, user, group, type, status) with constraints for balance reconciliation in `specs/001-mvp-implementation-plan/data-model.md`
+- [ ] **[T020][p]** Design double-entry LedgerEntry schema (timestamp, debit, credit, balance, reference, user, group, type, status) with constraints for balance reconciliation in `specs/001-mvp-implementation-plan/data-model.md`
 
-- [ ] **[T021] [P]** Design Notification entity (ID, user, type, title, message, action URL, read flag, delivery status) and document in `specs/001-mvp-implementation-plan/data-model.md`
+- [ ] **[T021][p]** Design Notification entity (ID, user, type, title, message, action URL, read flag, delivery status) and document in `specs/001-mvp-implementation-plan/data-model.md`
 
-- [ ] **[T022] [P]** Design GroupMember entity (ID, group, user, joined date, individual trust score, status: active/pending/suspended) and document in `specs/001-mvp-implementation-plan/data-model.md`
+- [ ] **[T022][p]** Design GroupMember entity (ID, group, user, joined date, individual trust score, status: active/pending/suspended) and document in `specs/001-mvp-implementation-plan/data-model.md`
 
-- [ ] **[T023] [P]** Design PayoutCycle entity (ID, group, recipient, scheduled date, actual date, amount, status with state machine) and document in `specs/001-mvp-implementation-plan/data-model.md`
+- [ ] **[T023][p]** Design PayoutCycle entity (ID, group, recipient, scheduled date, actual date, amount, status with state machine) and document in `specs/001-mvp-implementation-plan/data-model.md`
 
 - [ ] **[T024]** Design relational mappings, indexes, and constraints for all entities; document PostgreSQL migration strategy and temporal audit tables in `specs/001-mvp-implementation-plan/data-model.md`
 
-- [ ] **[T025] [US1]** Design KYC verification state machine (email verified → phone verified → BVN verified → face ID verified → bank verified → approved/rejected) in `specs/001-mvp-implementation-plan/data-model.md`
+- [ ] **[T025][us1]** Design KYC verification state machine (email verified → phone verified → BVN verified → face ID verified → bank verified → approved/rejected) in `specs/001-mvp-implementation-plan/data-model.md`
 
 ### Subphase 1b: API Contract Design (Weeks 3-5)
 
-- [ ] **[T026] [US1]** Design authentication API endpoints: `POST /api/auth/register`, `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `POST /auth/verify-bvn`, `GET /auth/verify-bvn/:requestId`, `POST /auth/verify-biometric` in `specs/001-mvp-implementation-plan/contracts/api.md`
+- [ ] **[T026][us1]** Design authentication API endpoints: `POST /api/auth/register`, `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `POST /auth/verify-bvn`, `GET /auth/verify-bvn/:requestId`, `POST /auth/verify-biometric` in `specs/001-mvp-implementation-plan/contracts/api.md`
 
-- [ ] **[T027] [US2]** Design wallet API endpoints: `GET /api/wallet/balance`, `POST /wallet/deposit`, `POST /wallet/withdraw`, `GET /api/wallet/transactions`, `GET /wallet/transaction/:id`, `GET /api/wallet/escrow` in `specs/001-mvp-implementation-plan/contracts/api.md`
+- [ ] **[T027][us2]** Design wallet API endpoints: `GET /api/wallet/balance`, `POST /wallet/deposit`, `POST /wallet/withdraw`, `GET /api/wallet/transactions`, `GET /wallet/transaction/:id`, `GET /api/wallet/escrow` in `specs/001-mvp-implementation-plan/contracts/api.md`
 
-- [ ] **[T028] [US3]** Design groups API endpoints: `GET/POST /api/groups`, `GET /groups/:id`, `POST /groups/:id/join`, `GET /groups/:id/members` in `specs/001-mvp-implementation-plan/contracts/api.md`
+- [ ] **[T028][us3]** Design groups API endpoints: `GET/POST /api/groups`, `GET /groups/:id`, `POST /groups/:id/join`, `GET /groups/:id/members` in `specs/001-mvp-implementation-plan/contracts/api.md`
 
-- [ ] **[T029] [US4]** Design contributions API endpoints: `GET/POST /api/groups/:id/contributions`, `GET /contributions/:id`, `POST /contributions/:id/status` in `specs/001-mvp-implementation-plan/contracts/api.md`
+- [ ] **[T029][us4]** Design contributions API endpoints: `GET/POST /api/groups/:id/contributions`, `GET /contributions/:id`, `POST /contributions/:id/status` in `specs/001-mvp-implementation-plan/contracts/api.md`
 
-- [ ] **[T030] [US5]** Design payout API endpoints: `GET/POST /api/payouts`, `GET /payouts/:id`, `POST /payouts/:id/approve`, `POST /payouts/:id/execute`, `GET /payouts/history` in `specs/001-mvp-implementation-plan/contracts/api.md`
+- [ ] **[T030][us5]** Design payout API endpoints: `GET/POST /api/payouts`, `GET /payouts/:id`, `POST /payouts/:id/approve`, `POST /payouts/:id/execute`, `GET /payouts/history` in `specs/001-mvp-implementation-plan/contracts/api.md`
 
-- [ ] **[T031] [US6]** Design admin endpoints: `POST /admin/groups/:id/members/:memberId/approve`, `POST /admin/groups/:id/members/:memberId/reject`, `GET /admin/audit-log`, `GET /admin/alerts` in `specs/001-mvp-implementation-plan/contracts/api.md`
+- [ ] **[T031][us6]** Design admin endpoints: `POST /admin/groups/:id/members/:memberId/approve`, `POST /admin/groups/:id/members/:memberId/reject`, `GET /admin/audit-log`, `GET /admin/alerts` in `specs/001-mvp-implementation-plan/contracts/api.md`
 
-- [ ] **[T032] [US7]** Design transaction history API: `GET /api/transactions`, `GET /transactions/:id`, `GET /transactions/export`, with filters (type, date range, group) in `specs/001-mvp-implementation-plan/contracts/api.md`
+- [ ] **[T032][us7]** Design transaction history API: `GET /api/transactions`, `GET /transactions/:id`, `GET /transactions/export`, with filters (type, date range, group) in `specs/001-mvp-implementation-plan/contracts/api.md`
 
 - [ ] **[T033]** Design error response contract: `{ success: boolean, data?: {}, error?: { code, message }, requestId: string }` and HTTP status code mapping; document in `specs/001-mvp-implementation-plan/contracts/api.md`
 
@@ -131,7 +133,7 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 
 - [ ] **[T035]** Design and draft Group Agreement template (customizable by creator, e-signature integration, member acceptance workflow) in `specs/001-mvp-implementation-plan/contracts/group-agreement.md`
 
-- [ ] **[T036] [US1]** Design KYC/AML verification checklist and approval workflow (email → phone → BVN → face ID → bank → KYC level assignment) in `specs/001-mvp-implementation-plan/contracts/kba-checklist.md`
+- [ ] **[T036][us1]** Design KYC/AML verification checklist and approval workflow (email → phone → BVN → face ID → bank → KYC level assignment) in `specs/001-mvp-implementation-plan/contracts/kba-checklist.md`
 
 - [ ] **[T037]** Design payment gateway webhook handlers (deposit confirmation, failed payment, refund events) and document expected JSON payloads in `specs/001-mvp-implementation-plan/contracts/webhooks.md`
 
@@ -151,9 +153,9 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 
 ### Subphase 1e: Compliance & Security Review (Week 6)
 
-- [ ] **[T044] [US9,US10]** Create audit logging architecture specification (immutable append-only log, 7-year retention, export capability) in `specs/001-mvp-implementation-plan/contracts/audit.md`
+- [ ] **[T044][us9,us10]** Create audit logging architecture specification (immutable append-only log, 7-year retention, export capability) in `specs/001-mvp-implementation-plan/contracts/audit.md`
 
-- [ ] **[T045] [US10]** Create security checklist: TLS 1.3, bcrypt hashing, biometric tokenization, BVN/NIN encryption, JWT token strategy, CSRF protection, session timeout in `specs/001-mvp-implementation-plan/contracts/security.md`
+- [ ] **[T045][us10]** Create security checklist: TLS 1.3, bcrypt hashing, biometric tokenization, BVN/NIN encryption, JWT token strategy, CSRF protection, session timeout in `specs/001-mvp-implementation-plan/contracts/security.md`
 
 - [ ] **[T046]** Conduct Phase 1 security & compliance review with lawyer; document all requirements and approval sign-off
 
@@ -166,6 +168,7 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 **Goal**: Build production-grade backend, integrate payment gateway, launch MVP. All 12 user stories implemented, tested, deployed.
 
 **Success Criteria**:
+
 - [ ] Users can complete full flow: signup → deposit → group → contribute → payout
 - [ ] All transactions recorded in immutable ledger with zero discrepancies
 - [ ] KYC/AML 100% automated with manual review workflow
@@ -176,13 +179,13 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 
 ### Subphase 2a: Backend Infrastructure (Weeks 7-8)
 
-- [ ] **[T048] [P]** Create backend project structure: `backend/src/{app, config, middleware, models, services, routes, utils}` with TypeScript configuration `backend/tsconfig.json`, `backend/.env.example`
+- [ ] **[T048][p]** Create backend project structure: `backend/src/{app, config, middleware, models, services, routes, utils}` with TypeScript configuration `backend/tsconfig.json`, `backend/.env.example`
 
-- [ ] **[T049] [P]** Set up Express.js application scaffold with middleware stack (authentication, error handling, request logging, CORS) in `backend/src/app.ts`
+- [ ] **[T049][p]** Set up Express.js application scaffold with middleware stack (authentication, error handling, request logging, CORS) in `backend/src/app.ts`
 
-- [ ] **[T050] [P]** Configure PostgreSQL connection pool with environment variables, connection retry logic, health check endpoint in `backend/src/config/database.ts`
+- [ ] **[T050][p]** Configure PostgreSQL connection pool with environment variables, connection retry logic, health check endpoint in `backend/src/config/database.ts`
 
-- [ ] **[T051] [P]** Set up Redis client for session storage, caching, and job queue in `backend/src/config/redis.ts`
+- [ ] **[T051][p]** Set up Redis client for session storage, caching, and job queue in `backend/src/config/redis.ts`
 
 - [ ] **[T052]** Design and implement database migrations (Knex.js or TypeORM) for all entities from Phase 1 data model in `backend/migrations/` directory
 
@@ -196,19 +199,19 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 
 ### Subphase 2b: Authentication & KYC (Weeks 7-9)
 
-- [ ] **[T057] [US1]** Implement user registration endpoint: email validation, password hashing (bcrypt 12+ rounds), user creation, initial trust score (20%) in `backend/src/routes/auth.ts`, `backend/src/services/auth.ts`
+- [ ] **[T057][us1]** Implement user registration endpoint: email validation, password hashing (bcrypt 12+ rounds), user creation, initial trust score (20%) in `backend/src/routes/auth.ts`, `backend/src/services/auth.ts`
 
-- [ ] **[T058] [US1]** Implement login endpoint with password comparison, JWT token generation, refresh token creation in `backend/src/routes/auth.ts`
+- [ ] **[T058][us1]** Implement login endpoint with password comparison, JWT token generation, refresh token creation in `backend/src/routes/auth.ts`
 
-- [ ] **[T059] [US1]** Integrate BVN verification API: create `backend/src/services/kyc.ts` with BVN lookup, response parsing, verification state update
+- [ ] **[T059][us1]** Integrate BVN verification API: create `backend/src/services/kyc.ts` with BVN lookup, response parsing, verification state update
 
-- [ ] **[T060] [US1]** Integrate facial recognition API for biometric verification: hash biometric data, store encrypted in database, never transmit plaintext in `backend/src/services/kyc.ts`
+- [ ] **[T060][us1]** Integrate facial recognition API for biometric verification: hash biometric data, store encrypted in database, never transmit plaintext in `backend/src/services/kyc.ts`
 
-- [ ] **[T061] [US1]** Implement bank account verification: Naira name match checking, account validation against BVN data in `backend/src/services/kyc.ts`
+- [ ] **[T061][us1]** Implement bank account verification: Naira name match checking, account validation against BVN data in `backend/src/services/kyc.ts`
 
-- [ ] **[T062] [US1]** Implement KYC state machine: email → phone → BVN → face ID → bank → approved, with rejection handling and manual review workflow in `backend/src/services/kyc.ts`
+- [ ] **[T062][us1]** Implement KYC state machine: email → phone → BVN → face ID → bank → approved, with rejection handling and manual review workflow in `backend/src/services/kyc.ts`
 
-- [ ] **[T063] [US1]** Create KYC checklist endpoint: `GET /api/auth/kyc-status` returning completion percentage and next required verification step
+- [ ] **[T063][us1]** Create KYC checklist endpoint: `GET /api/auth/kyc-status` returning completion percentage and next required verification step
 
 ### Subphase 2c: Financial Core - Ledger & Escrow (Weeks 8-10)
 
@@ -226,73 +229,73 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 
 ### Subphase 2d: Payment Gateway Integration (Weeks 9-10)
 
-- [ ] **[T070] [US2]** Integrate selected payment gateway (Paystack/Flutterwave): create payment link generator, redirect URLs, webhook handlers in `backend/src/config/payment.ts`, `backend/src/services/payment.ts`
+- [ ] **[T070][us2]** Integrate selected payment gateway (Paystack/Flutterwave): create payment link generator, redirect URLs, webhook handlers in `backend/src/config/payment.ts`, `backend/src/services/payment.ts`
 
-- [ ] **[T071] [US2]** Implement deposit flow: amount entry → payment gateway redirect → confirm payment → webhook → wallet credit → ledger entry → receipt generation in `backend/src/routes/wallet.ts`
+- [ ] **[T071][us2]** Implement deposit flow: amount entry → payment gateway redirect → confirm payment → webhook → wallet credit → ledger entry → receipt generation in `backend/src/routes/wallet.ts`
 
-- [ ] **[T072] [US2]** Implement payment webhook handler: receive payment confirmation from gateway, verify signature, update transaction status, credit wallet in `backend/src/routes/webhooks.ts`
+- [ ] **[T072][us2]** Implement payment webhook handler: receive payment confirmation from gateway, verify signature, update transaction status, credit wallet in `backend/src/routes/webhooks.ts`
 
-- [ ] **[T073] [US2]** Implement failed payment handling: refund logic, customer notification, ledger rollback in `backend/src/services/payment.ts`
+- [ ] **[T073][us2]** Implement failed payment handling: refund logic, customer notification, ledger rollback in `backend/src/services/payment.ts`
 
-- [ ] **[T074] [US2]** Create receipt generation: PDF creation with transaction details, user signature, timestamp in `backend/src/services/receipt.ts`
+- [ ] **[T074][us2]** Create receipt generation: PDF creation with transaction details, user signature, timestamp in `backend/src/services/receipt.ts`
 
-- [ ] **[T075] [US12]** Implement bank settlement API: call NACCS or direct bank API for withdrawal payout, track settlement confirmation, update wallet in `backend/src/services/settlement.ts`
+- [ ] **[T075][us12]** Implement bank settlement API: call NACCS or direct bank API for withdrawal payout, track settlement confirmation, update wallet in `backend/src/services/settlement.ts`
 
-- [ ] **[T076] [US12]** Implement withdrawal flow: amount entry → bank verification → OTP confirmation → payout request → settlement → receipt in `backend/src/routes/wallet.ts`
+- [ ] **[T076][us12]** Implement withdrawal flow: amount entry → bank verification → OTP confirmation → payout request → settlement → receipt in `backend/src/routes/wallet.ts`
 
 ### Subphase 2e: Groups & Contributions (Weeks 9-11)
 
-- [ ] **[T077] [US3]** Implement group creation: group details, contribution schedule, member slots, Shariah compliance flag in `backend/src/services/group.ts`, `backend/src/models/Group.ts`
+- [ ] **[T077][us3]** Implement group creation: group details, contribution schedule, member slots, Shariah compliance flag in `backend/src/services/group.ts`, `backend/src/models/Group.ts`
 
-- [ ] **[T078] [US3]** Implement group discovery: list all groups, filtering (goal, frequency, payout size, Shariah flag), search by name in `backend/src/routes/groups.ts`
+- [ ] **[T078][us3]** Implement group discovery: list all groups, filtering (goal, frequency, payout size, Shariah flag), search by name in `backend/src/routes/groups.ts`
 
-- [ ] **[T079] [US3]** Implement join request workflow: user requests to join → admin approval/rejection → member added to group in `backend/src/services/group.ts`
+- [ ] **[T079][us3]** Implement join request workflow: user requests to join → admin approval/rejection → member added to group in `backend/src/services/group.ts`
 
-- [ ] **[T080] [US3]** Implement membership roles: creator (full control), admin (approve members, manage payouts), member (contribute, receive payouts) in `backend/src/models/GroupMember.ts`
+- [ ] **[T080][us3]** Implement membership roles: creator (full control), admin (approve members, manage payouts), member (contribute, receive payouts) in `backend/src/models/GroupMember.ts`
 
-- [ ] **[T081] [US4]** Implement contribution creation: auto-generate contributions from group schedule, assign to users in order in `backend/src/services/contribution.ts`
+- [ ] **[T081][us4]** Implement contribution creation: auto-generate contributions from group schedule, assign to users in order in `backend/src/services/contribution.ts`
 
-- [ ] **[T082] [US4]** Implement contribution flow: user sees due contribution → selects payment method → confirms → processes payment → records in ledger → escrow hold in `backend/src/routes/contributions.ts`
+- [ ] **[T082][us4]** Implement contribution flow: user sees due contribution → selects payment method → confirms → processes payment → records in ledger → escrow hold in `backend/src/routes/contributions.ts`
 
-- [ ] **[T083] [US4]** Implement contribution reminders: cronjob fires 2 days, 1 day, day-of reminder notifications in `backend/src/jobs/contributionReminder.ts`
+- [ ] **[T083][us4]** Implement contribution reminders: cronjob fires 2 days, 1 day, day-of reminder notifications in `backend/src/jobs/contributionReminder.ts`
 
-- [ ] **[T084] [US5]** Implement payout scheduling: on last contribution received, schedule payout for recipient with admin review required in `backend/src/services/payout.ts`
+- [ ] **[T084][us5]** Implement payout scheduling: on last contribution received, schedule payout for recipient with admin review required in `backend/src/services/payout.ts`
 
-- [ ] **[T085] [US5]** Implement payout approval workflow: admin reviews, approves/rejects, system processes funds release from escrow to recipient wallet in `backend/src/routes/payouts.ts`
+- [ ] **[T085][us5]** Implement payout approval workflow: admin reviews, approves/rejects, system processes funds release from escrow to recipient wallet in `backend/src/routes/payouts.ts`
 
 ### Subphase 2f: Users, Trust & Admin (Weeks 10-11)
 
-- [ ] **[T086] [US8]** Implement trust score calculation: algorithm factors (punctuality 40%, consistency 30%, duration 20%, reviews 10%) in `backend/src/services/trustScore.ts`
+- [ ] **[T086][us8]** Implement trust score calculation: algorithm factors (punctuality 40%, consistency 30%, duration 20%, reviews 10%) in `backend/src/services/trustScore.ts`
 
-- [ ] **[T087] [US8]** Create trust score update job: recalculate after each contribution/payout cycle, track historical changes in `backend/src/jobs/updateTrustScores.ts`
+- [ ] **[T087][us8]** Create trust score update job: recalculate after each contribution/payout cycle, track historical changes in `backend/src/jobs/updateTrustScores.ts`
 
-- [ ] **[T088] [US6]** Implement admin member approval flow: pending requests → view applicant details → approve/reject with decision logging in `backend/src/routes/admin.ts`
+- [ ] **[T088][us6]** Implement admin member approval flow: pending requests → view applicant details → approve/reject with decision logging in `backend/src/routes/admin.ts`
 
-- [ ] **[T089] [US6]** Create admin dashboard endpoints: list pending approvals, active members, recent transactions in `backend/src/routes/admin.ts`
+- [ ] **[T089][us6]** Create admin dashboard endpoints: list pending approvals, active members, recent transactions in `backend/src/routes/admin.ts`
 
 - [ ] **[T090]** Implement user profile endpoint: retrieve user details, trust score breakdown, group memberships, transaction history in `backend/src/routes/profile.ts`
 
 ### Subphase 2g: Notifications & Activity Feed (Weeks 10-11)
 
-- [ ] **[T091] [US11]** Implement notification service: create, store, retrieve, mark as read in `backend/src/services/notification.ts`, `backend/src/models/Notification.ts`
+- [ ] **[T091][us11]** Implement notification service: create, store, retrieve, mark as read in `backend/src/services/notification.ts`, `backend/src/models/Notification.ts`
 
-- [ ] **[T092] [US11]** Integrate email notification provider (SendGrid/Mailgun): send transactional emails for deposits, contributions, payouts in `backend/src/services/email.ts`
+- [ ] **[T092][us11]** Integrate email notification provider (SendGrid/Mailgun): send transactional emails for deposits, contributions, payouts in `backend/src/services/email.ts`
 
-- [ ] **[T093] [US11]** Create notification job scheduler: contribution reminders (2d, 1d, 0d), payout ready alerts, member join notifications in `backend/src/jobs/notificationScheduler.ts`
+- [ ] **[T093][us11]** Create notification job scheduler: contribution reminders (2d, 1d, 0d), payout ready alerts, member join notifications in `backend/src/jobs/notificationScheduler.ts`
 
-- [ ] **[T094] [US11]** Implement activity feed: record all user actions, group events, payouts, and serve as event stream in `backend/src/services/activityFeed.ts`
+- [ ] **[T094][us11]** Implement activity feed: record all user actions, group events, payouts, and serve as event stream in `backend/src/services/activityFeed.ts`
 
 ### Subphase 2h: Compliance, Testing & Deployment (Weeks 11-12)
 
-- [ ] **[T095] [US9]** Implement full audit logging: all financial transactions, admin actions, KYC steps, login attempts with timestamp and user context in `backend/src/services/auditLog.ts`
+- [ ] **[T095][us9]** Implement full audit logging: all financial transactions, admin actions, KYC steps, login attempts with timestamp and user context in `backend/src/services/auditLog.ts`
 
-- [ ] **[T096] [US9]** Create audit export endpoint: generate CBN/EFCC compliant reports filtered by date, user, action type, with validation in `backend/src/routes/admin.ts`
+- [ ] **[T096][us9]** Create audit export endpoint: generate CBN/EFCC compliant reports filtered by date, user, action type, with validation in `backend/src/routes/admin.ts`
 
-- [ ] **[T097] [US10]** Implement encryption at rest: AES-256 for sensitive fields (BVN, NIN, bank account) using Node.js crypto module in `backend/src/utils/crypto.ts`
+- [ ] **[T097][us10]** Implement encryption at rest: AES-256 for sensitive fields (BVN, NIN, bank account) using Node.js crypto module in `backend/src/utils/crypto.ts`
 
-- [ ] **[T098] [US10]** Implement TLS 1.3: configure Express.js SSL/TLS certificates, verify cipher suites, set security headers (HSTS, CSP) in `backend/src/config/ssl.ts`
+- [ ] **[T098][us10]** Implement TLS 1.3: configure Express.js SSL/TLS certificates, verify cipher suites, set security headers (HSTS, CSP) in `backend/src/config/ssl.ts`
 
-- [ ] **[T099] [US10]** Implement session management: 15-min access token, 30-day refresh token in HTTP-only cookies, CSRF tokens for state-changing requests in `backend/src/middleware/auth.ts`
+- [ ] **[T099][us10]** Implement session management: 15-min access token, 30-day refresh token in HTTP-only cookies, CSRF tokens for state-changing requests in `backend/src/middleware/auth.ts`
 
 - [ ] **[T100]** Set up monitoring & alerting: Sentry error tracking, Datadog APM, PagerDuty incident response in `backend/src/config/monitoring.ts`
 
@@ -308,21 +311,21 @@ Tasks are grouped by **Phase** (0 → Research, 1 → Design, 2 → Implementati
 
 ### Subphase 2i: Frontend Integration & Launch (Weeks 11-12)
 
-- [ ] **[T106] [P]** Create API client layer: `src/app/services/auth.ts`, `src/app/services/wallet.ts`, `src/app/services/groups.ts`, `src/app/services/contributions.ts` with error handling
+- [ ] **[T106][p]** Create API client layer: `src/app/services/auth.ts`, `src/app/services/wallet.ts`, `src/app/services/groups.ts`, `src/app/services/contributions.ts` with error handling
 
-- [ ] **[T107] [P]** Implement authentication context: user state, login/logout flows, token refresh, user profile fetching in `src/app/context/AuthContext.tsx`
+- [ ] **[T107][p]** Implement authentication context: user state, login/logout flows, token refresh, user profile fetching in `src/app/context/AuthContext.tsx`
 
-- [ ] **[T108] [P]** Implement wallet service hook: balance fetching, deposit flow, withdrawal flow, transaction history in `src/app/services/wallet.ts`
+- [ ] **[T108][p]** Implement wallet service hook: balance fetching, deposit flow, withdrawal flow, transaction history in `src/app/services/wallet.ts`
 
-- [ ] **[T109] [P]** Wire dashboard to backend: fetch user profile, wallet balance, my contributions, upcoming payouts, trust score in `src/app/pages/Dashboard.tsx`
+- [ ] **[T109][p]** Wire dashboard to backend: fetch user profile, wallet balance, my contributions, upcoming payouts, trust score in `src/app/pages/Dashboard.tsx`
 
-- [ ] **[T110] [P]** Wire groups marketplace: fetch groups list, apply filters, search, join request flow in `src/app/pages/Groups.tsx`
+- [ ] **[T110][p]** Wire groups marketplace: fetch groups list, apply filters, search, join request flow in `src/app/pages/Groups.tsx`
 
-- [ ] **[T111] [P]** Wire group detail: show group info, member list, contribution schedule, payout history in `src/app/pages/GroupDetail.tsx`
+- [ ] **[T111][p]** Wire group detail: show group info, member list, contribution schedule, payout history in `src/app/pages/GroupDetail.tsx`
 
-- [ ] **[T112] [P]** Wire wallet page: show balance, deposit flow, transaction history, withdrawal flow in `src/app/pages/Wallet.tsx`
+- [ ] **[T112][p]** Wire wallet page: show balance, deposit flow, transaction history, withdrawal flow in `src/app/pages/Wallet.tsx`
 
-- [ ] **[T113] [P]** Wire profile page: show user details, trust score breakdown, KYC status, linked bank account in `src/app/pages/Profile.tsx`
+- [ ] **[T113][p]** Wire profile page: show user details, trust score breakdown, KYC status, linked bank account in `src/app/pages/Profile.tsx`
 
 - [ ] **[T114]** Create onboarding flow wiring: signup → phone verification → KYC flow → dashboard redirect in `src/app/pages/` with backend integration
 
@@ -477,6 +480,7 @@ Phase 2: Implementation (Weeks 7-12)
 The MVP enables **one complete financial cycle**: user signup → fund wallet → create/join group → contribute → receive payout.
 
 **In Scope** (Week 12 launch):
+
 - User registration & KYC/AML
 - Wallet & deposits (real payment gateway)
 - Group creation & discovery
@@ -490,6 +494,7 @@ The MVP enables **one complete financial cycle**: user signup → fund wallet �
 - Monitoring & alerting
 
 **Out of Scope** (Phase 2+):
+
 - Real-time notifications (Phase 2.5: implement full notification service)
 - ShuraBot AI recommendations (Phase 2.5: LLM backend)
 - Sadaqah module (Phase 3: charitable savings)
@@ -499,14 +504,14 @@ The MVP enables **one complete financial cycle**: user signup → fund wallet �
 
 ### Release Schedule
 
-| Week | Milestone | Deliverables | Status |
-|------|-----------|--------------|--------|
-| 1-2 | **Phase 0 Research** | `research.md`, vendor selections, contracts signed | 🟡 Started |
-| 3-6 | **Phase 1 Design** | Data model, API contracts, quickstart, legal docs | ⏳ Pending Phase 0 |
-| 7-8 | **Backend Foundation** | Express API scaffold, auth, database, middleware | ⏳ |
-| 9-10 | **Financial Core** | Payment gateway, ledger, escrow, contributions | ⏳ |
-| 11-12 | **Launch Prep** | Testing, compliance review, monitoring, deployment | ⏳ |
-| 12 | **MVP Live** | 1,000 beta users, real transactions enabled | 🚀 |
+| Week  | Milestone              | Deliverables                                       | Status             |
+| ----- | ---------------------- | -------------------------------------------------- | ------------------ |
+| 1-2   | **Phase 0 Research**   | `research.md`, vendor selections, contracts signed | 🟡 Started         |
+| 3-6   | **Phase 1 Design**     | Data model, API contracts, quickstart, legal docs  | ⏳ Pending Phase 0 |
+| 7-8   | **Backend Foundation** | Express API scaffold, auth, database, middleware   | ⏳                 |
+| 9-10  | **Financial Core**     | Payment gateway, ledger, escrow, contributions     | ⏳                 |
+| 11-12 | **Launch Prep**        | Testing, compliance review, monitoring, deployment | ⏳                 |
+| 12    | **MVP Live**           | 1,000 beta users, real transactions enabled        | 🚀                 |
 
 ---
 
@@ -676,10 +681,10 @@ Khalia/
 
 ## Document Version & History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | Apr 20, 2026 | Specification Agent | Initial task breakdown from plan.md + spec.md |
-| — | — | — | — |
+| Version | Date         | Author              | Changes                                       |
+| ------- | ------------ | ------------------- | --------------------------------------------- |
+| 1.0     | Apr 20, 2026 | Specification Agent | Initial task breakdown from plan.md + spec.md |
+| —       | —            | —                   | —                                             |
 
 ---
 

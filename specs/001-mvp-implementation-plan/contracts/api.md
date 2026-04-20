@@ -14,22 +14,26 @@
 **Authentication**: JWT with 15-min access token, 30-day refresh token  
 **Error Format**: All errors return `{ success: false, error: { code, message }, requestId }`  
 **Rate Limiting**: 100 requests/min per user  
-**Response Timeout**: 30 seconds  
+**Response Timeout**: 30 seconds
 
 ---
 
 ## API Response Format
 
 ### Success Response
+
 ```json
 {
   "success": true,
-  "data": { /* response payload */ },
+  "data": {
+    /* response payload */
+  },
   "requestId": "req_abc123"
 }
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -44,18 +48,18 @@
 
 ### HTTP Status Codes
 
-| Status | Use Case |
-|--------|----------|
-| 200 | Success (GET, PUT, PATCH) |
-| 201 | Resource created (POST) |
-| 204 | No content (DELETE) |
-| 400 | Validation error (bad request) |
-| 401 | Unauthenticated (no token) |
-| 403 | Forbidden (insufficient permissions) |
-| 404 | Resource not found |
-| 409 | Conflict (duplicate, state violation) |
-| 429 | Rate limited |
-| 500 | Server error |
+| Status | Use Case                              |
+| ------ | ------------------------------------- |
+| 200    | Success (GET, PUT, PATCH)             |
+| 201    | Resource created (POST)               |
+| 204    | No content (DELETE)                   |
+| 400    | Validation error (bad request)        |
+| 401    | Unauthenticated (no token)            |
+| 403    | Forbidden (insufficient permissions)  |
+| 404    | Resource not found                    |
+| 409    | Conflict (duplicate, state violation) |
+| 429    | Rate limited                          |
+| 500    | Server error                          |
 
 ---
 
@@ -68,6 +72,7 @@
 **OAuth**: None (public endpoint)
 
 **Request Body**:
+
 ```json
 {
   "email": "user@example.com",
@@ -79,12 +84,14 @@
 ```
 
 **Request Validation**:
+
 - `email`: Valid email format, unique in DB
 - `phone_number`: Valid Nigerian phone (0801-0999), unique in DB
 - `password`: Min 12 chars, uppercase, lowercase, number, special char
 - `first_name`, `last_name`: 2-50 chars, only letters/hyphens
 
 **Response (201)**:
+
 ```json
 {
   "success": true,
@@ -101,11 +108,13 @@
 ```
 
 **Error Cases**:
+
 - 400: Email/phone already exists
 - 400: Password doesn't meet requirements
 - 400: Invalid email/phone format
 
 **Side Effects**:
+
 - Send verification email (OTP)
 - Create audit log entry: `user_registered`
 - Initialize wallet with 0 balance
@@ -117,6 +126,7 @@
 **Purpose**: Authenticate user, return JWT tokens
 
 **Request Body**:
+
 ```json
 {
   "email": "user@example.com",
@@ -125,6 +135,7 @@
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -141,10 +152,12 @@
 ```
 
 **Error Cases**:
+
 - 401: Invalid email or password
 - 403: Account locked (too many failed attempts)
 
 **Side Effects**:
+
 - Create audit log: `user_login`
 - Set HTTP-only cookie: `refresh_token`
 
@@ -155,11 +168,13 @@
 **Purpose**: Refresh expired access token using refresh token
 
 **Headers**:
+
 ```
 Authorization: Bearer <refresh_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -171,6 +186,7 @@ Authorization: Bearer <refresh_token>
 ```
 
 **Error Cases**:
+
 - 401: Refresh token invalid/expired
 - 401: Refresh token revoked
 
@@ -181,11 +197,13 @@ Authorization: Bearer <refresh_token>
 **Purpose**: Revoke tokens, clear session
 
 **Headers**:
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -194,6 +212,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Side Effects**:
+
 - Add token to blacklist (Redis, 30-day TTL)
 - Create audit log: `user_logout`
 - Clear refresh_token cookie
@@ -205,6 +224,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Verify email with OTP
 
 **Request Body**:
+
 ```json
 {
   "email": "user@example.com",
@@ -213,6 +233,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -224,6 +245,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Cases**:
+
 - 400: Invalid or expired OTP
 - 404: User not found
 - 409: Email already verified
@@ -235,6 +257,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Verify phone with SMS OTP
 
 **Request Body**:
+
 ```json
 {
   "phone_number": "+234901234567",
@@ -243,6 +266,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -260,6 +284,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Initiate BVN verification (lookup against NIBSS)
 
 **Request Body**:
+
 ```json
 {
   "bvn": "22000000001"
@@ -267,6 +292,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -279,10 +305,12 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Cases**:
+
 - 400: Invalid BVN format
 - 400: BVN lookup failed (invalid BVN)
 
 **Side Effects**:
+
 - Call BVN provider API (NIBSS/aggregator)
 - Store encrypted BVN hash in DB
 - Send email with details to confirm
@@ -294,11 +322,13 @@ Authorization: Bearer <access_token>
 **Purpose**: Poll BVN verification status
 
 **Headers**:
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -325,6 +355,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Submit facial recognition for verification
 
 **Request Body**:
+
 ```json
 {
   "biometric_image_base64": "iVBORw0KGgoAAAANS...",
@@ -333,6 +364,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -346,6 +378,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Side Effects**:
+
 - Call facial recognition API (AWS Rekognition/Google Vision)
 - Store encrypted biometric template hash
 - Update KYC status
@@ -360,11 +393,13 @@ Authorization: Bearer <access_token>
 **Purpose**: Get current wallet balance and breakdown
 
 **Headers**:
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -385,6 +420,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Initiate deposit (returns payment link)
 
 **Request Body**:
+
 ```json
 {
   "amount_naira": 50000,
@@ -393,6 +429,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (201)**:
+
 ```json
 {
   "success": true,
@@ -407,6 +444,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Cases**:
+
 - 400: Amount must be > 100 naira
 - 403: User KYC incomplete (requires level 2+)
 - 409: Pending deposit already exists
@@ -418,6 +456,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Initiate withdrawal to bank account
 
 **Request Body**:
+
 ```json
 {
   "amount_naira": 25000
@@ -425,6 +464,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (201)**:
+
 ```json
 {
   "success": true,
@@ -439,6 +479,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Cases**:
+
 - 400: Insufficient balance
 - 403: User KYC incomplete (requires level 3+)
 - 409: Locked in escrow, cannot withdraw
@@ -450,6 +491,7 @@ Authorization: Bearer <access_token>
 **Purpose**: List wallet transactions with filtering
 
 **Query Params**:
+
 ```
 ?type=deposit,withdrawal,payout
 &status=completed,pending
@@ -460,6 +502,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -488,6 +531,7 @@ Authorization: Bearer <access_token>
 **Purpose**: View funds locked in escrow (contributions)
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -522,6 +566,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Discover all groups (with filters)
 
 **Query Params**:
+
 ```
 ?contribution_frequency=monthly
 &min_goal=50000
@@ -533,6 +578,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -567,6 +613,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Create new group
 
 **Request Body**:
+
 ```json
 {
   "name": "Business Owners Savings",
@@ -583,6 +630,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (201)**:
+
 ```json
 {
   "success": true,
@@ -603,6 +651,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Get group details, members, contribution schedule
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -649,6 +698,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Request to join group
 
 **Request Body**:
+
 ```json
 {
   "message": "I'm interested in joining"
@@ -656,6 +706,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (201)**:
+
 ```json
 {
   "success": true,
@@ -668,6 +719,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Error Cases**:
+
 - 404: Group not found
 - 409: Already member or pending
 - 409: Group is full
@@ -679,6 +731,7 @@ Authorization: Bearer <access_token>
 **Purpose**: List all group members
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -710,12 +763,14 @@ Authorization: Bearer <access_token>
 **Purpose**: Get all contributions for a group
 
 **Query Params**:
+
 ```
 ?status=pending,paid,overdue
 &user_id=user_456
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -744,6 +799,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Make a contribution payment
 
 **Request Body**:
+
 ```json
 {
   "payment_method": "card"
@@ -751,6 +807,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -772,12 +829,14 @@ Authorization: Bearer <access_token>
 **Purpose**: List payouts (created, awaiting approval, settled)
 
 **Query Params**:
+
 ```
 ?status=pending_approval,approved,settled,failed
 &group_id=grp_abc123
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -808,11 +867,13 @@ Authorization: Bearer <access_token>
 **Purpose**: Approve payout for settlement (admin only)
 
 **Headers**:
+
 ```
 Authorization: Bearer <admin_access_token>
 ```
 
 **Request Body**:
+
 ```json
 {
   "approval_notes": "Verified all contributions paid"
@@ -820,6 +881,7 @@ Authorization: Bearer <admin_access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -839,6 +901,7 @@ Authorization: Bearer <admin_access_token>
 **Purpose**: Execute settlement (transfer funds to recipient)
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -860,11 +923,13 @@ Authorization: Bearer <admin_access_token>
 **Purpose**: Approve pending group member join request
 
 **Headers**:
+
 ```
 Authorization: Bearer <admin_access_token>
 ```
 
 **Request Body**:
+
 ```json
 {
   "payout_sequence": 3,
@@ -873,6 +938,7 @@ Authorization: Bearer <admin_access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -892,6 +958,7 @@ Authorization: Bearer <admin_access_token>
 **Purpose**: Reject pending member join request
 
 **Request Body**:
+
 ```json
 {
   "rejection_reason": "KYC verification failed"
@@ -899,6 +966,7 @@ Authorization: Bearer <admin_access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -917,6 +985,7 @@ Authorization: Bearer <admin_access_token>
 **Purpose**: Export audit log for compliance (7-year retention)
 
 **Query Params**:
+
 ```
 ?action=kyc_verified,contribution_paid
 &date_from=2026-01-01
@@ -925,6 +994,7 @@ Authorization: Bearer <admin_access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -955,6 +1025,7 @@ Authorization: Bearer <admin_access_token>
 **Purpose**: View system alerts and anomalies
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -982,11 +1053,13 @@ Authorization: Bearer <admin_access_token>
 **Purpose**: Get current user profile
 
 **Headers**:
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -1028,6 +1101,7 @@ Authorization: Bearer <access_token>
 **Purpose**: Global transaction history with export
 
 **Query Params**:
+
 ```
 ?type=deposit,withdrawal,contribution,payout
 &status=completed
@@ -1037,6 +1111,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -1067,11 +1142,13 @@ Authorization: Bearer <access_token>
 
 **Purpose**: Receive payment confirmation from Paystack
 
-**Signature Validation**: 
+**Signature Validation**:
+
 - Verify request signature using `x-paystack-signature` header
 - Secret Key stored in AWS Secrets Manager
 
 **Request Body**:
+
 ```json
 {
   "event": "charge.success",
@@ -1088,6 +1165,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Process**:
+
 1. Verify signature
 2. Find transaction by reference
 3. Update transaction status to `confirmed`
@@ -1096,6 +1174,7 @@ Authorization: Bearer <access_token>
 6. Return 200 OK
 
 **Response (200)**:
+
 ```json
 {
   "success": true,
@@ -1107,31 +1186,32 @@ Authorization: Bearer <access_token>
 
 ## Error Code Reference
 
-| Code | Status | Description |
-|------|--------|-------------|
-| VALIDATION_ERROR | 400 | Input validation failed |
-| AUTH_REQUIRED | 401 | Missing or invalid token |
-| INSUFFICIENT_PERMISSIONS | 403 | User lacks required role |
-| NOT_FOUND | 404 | Resource doesn't exist |
-| CONFLICT | 409 | State violation (e.g., duplicate resource) |
-| RATE_LIMITED | 429 | Rate limit exceeded |
-| KYC_REQUIRED | 403 | KYC not complete for this operation |
-| INSUFFICIENT_BALANCE | 400 | Not enough funds |
-| ESCROW_LOCKED | 409 | Funds locked in escrow |
-| PAYMENT_FAILED | 402 | Payment gateway error |
-| LEDGER_ERROR | 500 | Ledger reconciliation failed |
-| EXTERNAL_SERVICE_ERROR | 503 | Third-party API unavailable |
+| Code                     | Status | Description                                |
+| ------------------------ | ------ | ------------------------------------------ |
+| VALIDATION_ERROR         | 400    | Input validation failed                    |
+| AUTH_REQUIRED            | 401    | Missing or invalid token                   |
+| INSUFFICIENT_PERMISSIONS | 403    | User lacks required role                   |
+| NOT_FOUND                | 404    | Resource doesn't exist                     |
+| CONFLICT                 | 409    | State violation (e.g., duplicate resource) |
+| RATE_LIMITED             | 429    | Rate limit exceeded                        |
+| KYC_REQUIRED             | 403    | KYC not complete for this operation        |
+| INSUFFICIENT_BALANCE     | 400    | Not enough funds                           |
+| ESCROW_LOCKED            | 409    | Funds locked in escrow                     |
+| PAYMENT_FAILED           | 402    | Payment gateway error                      |
+| LEDGER_ERROR             | 500    | Ledger reconciliation failed               |
+| EXTERNAL_SERVICE_ERROR   | 503    | Third-party API unavailable                |
 
 ---
 
 ## OpenAPI/Swagger Spec
 
 Full OpenAPI 3.0 specification available at:
+
 - `GET /api/v1/docs` - Swagger UI
 - `GET /api/v1/openapi.json` - OpenAPI spec download
 
 Import into Postman:
+
 ```
 https://api.khalia.ng/api/v1/openapi.json
 ```
-

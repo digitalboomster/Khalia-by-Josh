@@ -7,6 +7,7 @@
 ---
 
 ## Table of Contents
+
 1. [Core Vision & Principles](#core-vision--principles)
 2. [Product Architecture](#product-architecture)
 3. [Feature Requirements Matrix](#feature-requirements-matrix)
@@ -21,35 +22,41 @@
 ## Core Vision & Principles
 
 ### Mission
+
 **Khalia is a fintech platform for community-driven savings groups (ROSCA/Esusu), combining cooperative financial management with Shariah-compliant principles, trust-based verification, and AI-guided decision-making.**
 
 ### Core Principles
 
 #### 1. **Trust-First Design**
+
 - All features prioritize transparency, verification, and progressive trust evaluation
 - Trust scores calculated from contribution history, punctuality, and community reputation
 - Biometric & device verification built-in from onboarding
 - KYC/AML compliance enforceable at group and platform levels
 
 #### 2. **Shariah Compliance**
+
 - No interest-based lending or Riba
 - Transparent Sadaqah (charitable giving) integration
 - Halal investment options for idle balances
 - Governance rules allow groups to enforce Islamic principles
 
 #### 3. **Cooperative Ownership**
+
 - Groups are member-owned; creators are admins, not controllers
 - Democratic decision-making tools (polls, announcements, agreements)
 - Fair payout mechanisms (rotating, merit-based, or custom)
 - Clear, enforced contribution schedules
 
 #### 4. **AI-Guided Autonomy**
+
 - ShuraBot provides suggestions, not mandates
 - Members retain full control over contributions and payouts
 - AI learns group dynamics and patterns
 - Risk alerts inform, not restrict, member actions
 
 #### 5. **Financial Inclusion**
+
 - Multi-channel payments (bank, USSD, card, wallet)
 - Seamless fiat-to-wallet conversions
 - Micro-investment options for idle funds
@@ -64,6 +71,7 @@
 Each module must function with full user flows and state management, even if integrated with others.
 
 #### **Module 1: Onboarding & Verification** (MVP Critical)
+
 - **Purpose:** Establish identity, access, and trust baseline
 - **Components:**
   - Welcome screen with sign-up/sign-in
@@ -77,6 +85,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ❌ Not Started
 
 #### **Module 2: Dashboard (Home)** (MVP Critical)
+
 - **Purpose:** Central hub for awareness and quick actions
 - **Components:**
   - Wallet overview card (balance, escrow, next payout, total group savings)
@@ -93,6 +102,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ✅ 85% (missing task carousel wiring, impact cards interactivity)
 
 #### **Module 3: Groups (Marketplace)** (MVP Critical)
+
 - **Purpose:** Discover, browse, and join savings groups
 - **Components:**
   - Group discovery list/grid
@@ -110,6 +120,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ✅ 80% (missing Shariah toggle refinement, some filtering options)
 
 #### **Module 4: Group Detail & Management** (MVP Critical)
+
 - **Purpose:** Manage ongoing group operations and member interactions
 - **Components:**
   - Contribution schedule timeline (visual + calendar)
@@ -127,6 +138,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ✅ 75% (missing real-time chat service, live notifications)
 
 #### **Module 5: ShuraBot (AI Assistant)** (MVP Nice-to-Have, Phase 2 Critical)
+
 - **Purpose:** AI co-planning assistant for financial decisions
 - **Components:**
   - Chat interface with greeting & context awareness
@@ -144,6 +156,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ✅ 90% (UI complete; needs backend LLM service)
 
 #### **Module 6: Wallet & Transactions** (MVP Critical)
+
 - **Purpose:** Fund management, deposits, withdrawals, and escrow tracking
 - **Components:**
   - Wallet balance display (available, escrowed, pending)
@@ -163,6 +176,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ✅ 70% (UI ready; no payment gateway integration)
 
 #### **Module 7: Sadaqah & Impact** (Phase 2)
+
 - **Purpose:** Community giving and impact tracking
 - **Components:**
   - Sadaqah portion setter (% of savings set aside)
@@ -175,6 +189,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ❌ 0% (Not Started)
 
 #### **Module 8: Activity Feed & Notifications** (MVP Critical)
+
 - **Purpose:** Real-time awareness of group and personal events
 - **Components:**
   - Centralized activity feed (all contributions, payouts, member events)
@@ -190,6 +205,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ⚠️ 50% (Activity in groups; no dedicated feed or push notifications)
 
 #### **Module 9: Profile & Trust Score** (MVP Critical)
+
 - **Purpose:** Personal identity, verification status, and reputation management
 - **Components:**
   - Profile info (name, phone, email, verified status badges)
@@ -209,6 +225,7 @@ Each module must function with full user flows and state management, even if int
 - **Current Status:** ✅ 80% (UI complete; trust score calculation not wired)
 
 #### **Module 10: Admin & Governance Tools** (Phase 2)
+
 - **Purpose:** Group creators manage operations and enforce rules
 - **Components:**
   - Member approval dashboard (pending members, vetting criteria)
@@ -230,44 +247,45 @@ Each module must function with full user flows and state management, even if int
 
 ## Feature Requirements Matrix
 
-| Module | Feature | MVP Status | Phase | UI Status | Backend Status | Notes |
-|--------|---------|------------|-------|-----------|---|---------|
-| 1. Onboarding | BVN/NIN Verification | 🔴 Critical | 1 | ❌ Missing | ❌ Missing | Must integrate gov't DB |
-| 1. Onboarding | Bank Account Linking | 🔴 Critical | 1 | ❌ Missing | ❌ Missing | NACCS/Open Banking |
-| 1. Onboarding | Face ID/Fingerprint | 🔴 Critical | 1 | ❌ Missing | ❌ Missing | Device-level API |
-| 1. Onboarding | KYC Checklist | 🔴 Critical | 1 | ❌ Missing | ❌ Missing | Progress tracking |
-| 2. Dashboard | Wallet Card | 🟢 Core | 1 | ✅ 95% | ⚠️ Mock | Real data integration |
-| 2. Dashboard | Tasks Carousel | 🟢 Core | 1 | ✅ 90% | ⚠️ Partial | Needs task completion logic |
-| 2. Dashboard | Group Progress Pinwheel | 🟢 Core | 1 | ✅ 85% | ⚠️ Partial | Animation polish needed |
-| 2. Dashboard | Community Impact Cards | 🟢 Core | 1 | ✅ 80% | ⚠️ Mock | Analytics backend |
-| 2. Dashboard | Recent Activity Feed | 🟢 Core | 1 | ✅ 80% | ⚠️ Mock | Real-time updates |
-| 3. Groups | Group Discovery | 🟢 Core | 1 | ✅ 85% | ⚠️ Mock | Database search |
-| 3. Groups | Advanced Filtering | 🟡 Important | 1 | ✅ 80% | ⚠️ Partial | Shariah toggle needed |
-| 3. Groups | Group Creation | 🟢 Core | 1 | ✅ 85% | ⚠️ Mock | Form validation complete |
-| 3. Groups | Join Request Flow | 🟢 Core | 1 | ✅ 90% | ⚠️ Partial | Approval logic needed |
-| 4. Group Detail | Contribution Schedule | 🟢 Core | 1 | ✅ 85% | ⚠️ Mock | Calendar integration |
-| 4. Group Detail | Member List & Trust Scores | 🟢 Core | 1 | ✅ 80% | ⚠️ Mock | Trust score calc needed |
-| 4. Group Detail | Group Progress Wheel | 🟢 Core | 1 | ✅ 85% | ⚠️ Mock | Real-time updates |
-| 4. Group Detail | Communication Hub | 🟡 Important | 1 | ⚠️ 50% | ❌ Missing | WebSocket/chat service |
-| 5. ShuraBot | Chat Interface | 🟡 Important | 1 | ✅ 90% | ❌ Missing | LLM backend (Claude/GPT) |
-| 5. ShuraBot | Scenario Analysis | 🟡 Important | 2 | ✅ 85% | ❌ Missing | LLM inference |
-| 5. ShuraBot | Risk Alerts | 🟡 Important | 2 | ✅ 80% | ⚠️ Logic needed | Alert logic in backend |
-| 6. Wallet | Balance Display | 🟢 Core | 1 | ✅ 95% | ⚠️ Mock | Real balance from backend |
-| 6. Wallet | Deposit Flow | 🟢 Core | 1 | ✅ 90% | ❌ Missing | Payment gateway (Paystack/Flutterwave) |
-| 6. Wallet | Withdrawal Flow | 🟢 Core | 1 | ✅ 90% | ❌ Missing | Bank settlement API |
-| 6. Wallet | Transaction History | 🟢 Core | 1 | ✅ 85% | ⚠️ Mock | Database queries |
-| 7. Sadaqah | Portion Setter | 🟡 Important | 2 | ❌ Missing | ❌ Missing | Feature not started |
-| 7. Sadaqah | Impact Tracking | 🟡 Important | 2 | ❌ Missing | ❌ Missing | Analytics engine |
-| 8. Activity Feed | Centralized Feed | 🟢 Core | 1 | ⚠️ 50% | ⚠️ Partial | Real-time service needed |
-| 8. Activity Feed | Push Notifications | 🟢 Core | 1 | ❌ Missing | ❌ Missing | FCM/APNs integration |
-| 9. Profile | Trust Score Display | 🟢 Core | 1 | ✅ 85% | ⚠️ Logic missing | Algorithm implementation |
-| 9. Profile | Verification Badges | 🟢 Core | 1 | ✅ 90% | ⚠️ Partial | Verification workflow |
-| 9. Profile | Security Settings | 🟡 Important | 1 | ✅ 80% | ❌ Missing | Device management |
-| 10. Admin Tools | Member Approval | 🟡 Important | 2 | ⚠️ 30% | ⚠️ Logic missing | Admin workflow |
-| 10. Admin Tools | Payout Rules | 🟡 Important | 2 | ⚠️ 40% | ⚠️ Logic missing | Rule engine |
-| 10. Admin Tools | Audit Log | 🟡 Important | 2 | ❌ Missing | ❌ Missing | Event logging service |
+| Module           | Feature                    | MVP Status   | Phase | UI Status  | Backend Status   | Notes                                  |
+| ---------------- | -------------------------- | ------------ | ----- | ---------- | ---------------- | -------------------------------------- |
+| 1. Onboarding    | BVN/NIN Verification       | 🔴 Critical  | 1     | ❌ Missing | ❌ Missing       | Must integrate gov't DB                |
+| 1. Onboarding    | Bank Account Linking       | 🔴 Critical  | 1     | ❌ Missing | ❌ Missing       | NACCS/Open Banking                     |
+| 1. Onboarding    | Face ID/Fingerprint        | 🔴 Critical  | 1     | ❌ Missing | ❌ Missing       | Device-level API                       |
+| 1. Onboarding    | KYC Checklist              | 🔴 Critical  | 1     | ❌ Missing | ❌ Missing       | Progress tracking                      |
+| 2. Dashboard     | Wallet Card                | 🟢 Core      | 1     | ✅ 95%     | ⚠️ Mock          | Real data integration                  |
+| 2. Dashboard     | Tasks Carousel             | 🟢 Core      | 1     | ✅ 90%     | ⚠️ Partial       | Needs task completion logic            |
+| 2. Dashboard     | Group Progress Pinwheel    | 🟢 Core      | 1     | ✅ 85%     | ⚠️ Partial       | Animation polish needed                |
+| 2. Dashboard     | Community Impact Cards     | 🟢 Core      | 1     | ✅ 80%     | ⚠️ Mock          | Analytics backend                      |
+| 2. Dashboard     | Recent Activity Feed       | 🟢 Core      | 1     | ✅ 80%     | ⚠️ Mock          | Real-time updates                      |
+| 3. Groups        | Group Discovery            | 🟢 Core      | 1     | ✅ 85%     | ⚠️ Mock          | Database search                        |
+| 3. Groups        | Advanced Filtering         | 🟡 Important | 1     | ✅ 80%     | ⚠️ Partial       | Shariah toggle needed                  |
+| 3. Groups        | Group Creation             | 🟢 Core      | 1     | ✅ 85%     | ⚠️ Mock          | Form validation complete               |
+| 3. Groups        | Join Request Flow          | 🟢 Core      | 1     | ✅ 90%     | ⚠️ Partial       | Approval logic needed                  |
+| 4. Group Detail  | Contribution Schedule      | 🟢 Core      | 1     | ✅ 85%     | ⚠️ Mock          | Calendar integration                   |
+| 4. Group Detail  | Member List & Trust Scores | 🟢 Core      | 1     | ✅ 80%     | ⚠️ Mock          | Trust score calc needed                |
+| 4. Group Detail  | Group Progress Wheel       | 🟢 Core      | 1     | ✅ 85%     | ⚠️ Mock          | Real-time updates                      |
+| 4. Group Detail  | Communication Hub          | 🟡 Important | 1     | ⚠️ 50%     | ❌ Missing       | WebSocket/chat service                 |
+| 5. ShuraBot      | Chat Interface             | 🟡 Important | 1     | ✅ 90%     | ❌ Missing       | LLM backend (Claude/GPT)               |
+| 5. ShuraBot      | Scenario Analysis          | 🟡 Important | 2     | ✅ 85%     | ❌ Missing       | LLM inference                          |
+| 5. ShuraBot      | Risk Alerts                | 🟡 Important | 2     | ✅ 80%     | ⚠️ Logic needed  | Alert logic in backend                 |
+| 6. Wallet        | Balance Display            | 🟢 Core      | 1     | ✅ 95%     | ⚠️ Mock          | Real balance from backend              |
+| 6. Wallet        | Deposit Flow               | 🟢 Core      | 1     | ✅ 90%     | ❌ Missing       | Payment gateway (Paystack/Flutterwave) |
+| 6. Wallet        | Withdrawal Flow            | 🟢 Core      | 1     | ✅ 90%     | ❌ Missing       | Bank settlement API                    |
+| 6. Wallet        | Transaction History        | 🟢 Core      | 1     | ✅ 85%     | ⚠️ Mock          | Database queries                       |
+| 7. Sadaqah       | Portion Setter             | 🟡 Important | 2     | ❌ Missing | ❌ Missing       | Feature not started                    |
+| 7. Sadaqah       | Impact Tracking            | 🟡 Important | 2     | ❌ Missing | ❌ Missing       | Analytics engine                       |
+| 8. Activity Feed | Centralized Feed           | 🟢 Core      | 1     | ⚠️ 50%     | ⚠️ Partial       | Real-time service needed               |
+| 8. Activity Feed | Push Notifications         | 🟢 Core      | 1     | ❌ Missing | ❌ Missing       | FCM/APNs integration                   |
+| 9. Profile       | Trust Score Display        | 🟢 Core      | 1     | ✅ 85%     | ⚠️ Logic missing | Algorithm implementation               |
+| 9. Profile       | Verification Badges        | 🟢 Core      | 1     | ✅ 90%     | ⚠️ Partial       | Verification workflow                  |
+| 9. Profile       | Security Settings          | 🟡 Important | 1     | ✅ 80%     | ❌ Missing       | Device management                      |
+| 10. Admin Tools  | Member Approval            | 🟡 Important | 2     | ⚠️ 30%     | ⚠️ Logic missing | Admin workflow                         |
+| 10. Admin Tools  | Payout Rules               | 🟡 Important | 2     | ⚠️ 40%     | ⚠️ Logic missing | Rule engine                            |
+| 10. Admin Tools  | Audit Log                  | 🟡 Important | 2     | ❌ Missing | ❌ Missing       | Event logging service                  |
 
 **Legend:**
+
 - 🔴 Critical (Must have in MVP)
 - 🟢 Core (Should have in MVP)
 - 🟡 Important (Nice-to-have in Phase 1)
@@ -298,6 +316,7 @@ Personalization (Language, Theme, Notifications)
 ```
 
 **Requirements:**
+
 - Each step must have a "Back" option (except Welcome)
 - Progress indicator shows 5-6 steps
 - BVN verification must call government API
@@ -320,6 +339,7 @@ Dashboard (Home)
 ```
 
 **Requirements:**
+
 - Wallet card shows: Balance, "Next Contribution: 50,000 on Apr 25"
 - Tasks carousel shows 3-5 overdue/pending tasks
 - Pinwheel animates pool growth weekly
@@ -351,6 +371,7 @@ Administrator Approval
 ```
 
 **Requirements:**
+
 - Groups filterable by: Goal, Payout Size, Frequency, Shariah Compliance
 - Member trust requirement shown (e.g., "Requires 60+ trust score")
 - Application form can be customized by admin
@@ -382,6 +403,7 @@ Summary & Confirm
 ```
 
 **Requirements:**
+
 - Form validation on each step
 - Goal amount must be ≥ 100,000
 - Min 2 members, Max 50
@@ -414,6 +436,7 @@ Escrowed until payout date
 ```
 
 **Requirements:**
+
 - Payment processor must support all 4 methods
 - OTP valid for 10 minutes
 - Escrow holds amount securely
@@ -427,7 +450,7 @@ Escrowed until payout date
 ```
 Scheduled Payout Date Reached
     ↓
-Validation: All members contributed? 
+Validation: All members contributed?
     (Alert if members are late)
     ↓
 Initiate Payout to Next Recipient
@@ -443,6 +466,7 @@ Next Payout Countdown Begins
 ```
 
 **Requirements:**
+
 - Payout can be manual (admin approval) or auto (if rules met)
 - If members overdue, payout can be delayed (configurable grace period)
 - All members notified of payout event
@@ -462,6 +486,7 @@ Next Payout Countdown Begins
 ### Code Style & Architecture
 
 #### File Organization
+
 ```
 src/
 ├── main.tsx                      # Entry point
@@ -497,23 +522,30 @@ src/
 ```
 
 #### Component Standards
+
 - **Functional components only** (no class components)
 - **Props interface for every component**
+
   ```typescript
   interface DashboardProps {
     userId: string;
     onNavigate: (page: string) => void;
   }
-  
-  export const Dashboard: React.FC<DashboardProps> = ({ userId, onNavigate }) => {
+
+  export const Dashboard: React.FC<DashboardProps> = ({
+    userId,
+    onNavigate,
+  }) => {
     // ...
   };
   ```
+
 - **TypeScript strict mode:** All types explicit, no `any`
 - **Radix UI + Tailwind** for 100% components
 - **Hooks only** for state management (React Context or Redux for global state)
 
 #### Naming Conventions
+
 - **Pages:** PascalCase, export as `Page` (e.g., `DashboardPage`)
 - **Components:** PascalCase, descriptive
 - **Hooks:** camelCase, prefix with `use` (e.g., `useContributionReminder`)
@@ -521,12 +553,14 @@ src/
 - **Classes/IDs:** kebab-case (Tailwind)
 
 ### State Management
+
 - **Local State:** React `useState` for component-level state
 - **Global State:** React Context API + `useReducer` (or Redux if complexity grows)
 - **API State:** React Query (TanStack Query) for server state
 - **Form State:** React Hook Form + Zod for validation
 
 ### Authentication & Security
+
 - **Auth Flow:** JWT tokens (access + refresh)
 - **Token Storage:** Secure HTTP-only cookies (server-side)
 - **Session Management:** 30-min expiry, auto-refresh on tab focus
@@ -534,12 +568,14 @@ src/
 - **Passwords:** Minimum 12 characters, uppercase + lowercase + numbers + symbols
 
 ### Data Persistence
+
 - **Backend API:** RESTful with OpenAPI docs (Swagger)
 - **Database:** PostgreSQL (financial data integrity)
 - **Caching:** Redis for session, rate limits, group data
 - **Transactions:** Database-level ACID compliance for payments/transfers
 
 ### Testing Requirements
+
 - **Unit Tests:** Jest + React Testing Library
   - Target: 80% code coverage
   - All business logic must have tests
@@ -556,6 +592,7 @@ src/
 ### Core Entities
 
 #### User
+
 ```typescript
 interface User {
   id: string;
@@ -564,7 +601,7 @@ interface User {
   firstName: string;
   lastName: string;
   avatar?: string;
-  trustScore: number;           // 0-100
+  trustScore: number; // 0-100
   verificationStatus: {
     bvn: boolean;
     bank: boolean;
@@ -572,54 +609,63 @@ interface User {
     device: boolean;
   };
   wallet: {
-    balance: number;            // NGN cents
-    escrow: number;             // Locked in groups
+    balance: number; // NGN cents
+    escrow: number; // Locked in groups
     transactions: Transaction[];
   };
-  groups: Group[];              // Member of
+  groups: Group[]; // Member of
   createdAt: Date;
   updatedAt: Date;
 }
 ```
 
 #### Group
+
 ```typescript
 interface Group {
   id: string;
   name: string;
-  goal: number;                 // Total to save (NGN)
-  currentPool: number;          // Amount saved so far
-  frequency: 'weekly' | 'biweekly' | 'monthly';
-  contributionAmount: number;   // Per member per cycle
-  payoutOrder: 'rotating' | 'merit' | 'custom' | 'random';
+  goal: number; // Total to save (NGN)
+  currentPool: number; // Amount saved so far
+  frequency: "weekly" | "biweekly" | "monthly";
+  contributionAmount: number; // Per member per cycle
+  payoutOrder: "rotating" | "merit" | "custom" | "random";
   payoutSchedule: PayoutCycle[]; // Next payout dates
   members: GroupMember[];
   creator: User;
   shariatCompliant: boolean;
   governanceRules: GovernanceRule[];
-  status: 'active' | 'paused' | 'completed';
+  status: "active" | "paused" | "completed";
   createdAt: Date;
   nextPayoutDate: Date;
 }
 ```
 
 #### Transaction
+
 ```typescript
 interface Transaction {
   id: string;
   userId: string;
   groupId?: string;
-  type: 'deposit' | 'withdrawal' | 'contribution' | 'payout' | 'investment' | 'sadaqah';
-  amount: number;               // NGN cents
-  paymentMethod: 'bank' | 'ussd' | 'card' | 'wallet';
-  status: 'pending' | 'success' | 'failed';
-  reference: string;            // Payment reference
+  type:
+    | "deposit"
+    | "withdrawal"
+    | "contribution"
+    | "payout"
+    | "investment"
+    | "sadaqah";
+  amount: number; // NGN cents
+  paymentMethod: "bank" | "ussd" | "card" | "wallet";
+  status: "pending" | "success" | "failed";
+  reference: string; // Payment reference
   Receipt?: Receipt;
   createdAt: Date;
 }
 ```
 
 #### Contribution
+
 ```typescript
 interface Contribution {
   id: string;
@@ -628,22 +674,28 @@ interface Contribution {
   amount: number;
   dueDate: Date;
   paidDate?: Date;
-  status: 'pending' | 'overdue' | 'paid';
+  status: "pending" | "overdue" | "paid";
   transaction?: Transaction;
 }
 ```
 
 #### Notification
+
 ```typescript
 interface Notification {
   id: string;
   userId: string;
-  type: 'contribution_due' | 'payout_ready' | 'member_joined' | 'group_alert' | 'task_reminder';
+  type:
+    | "contribution_due"
+    | "payout_ready"
+    | "member_joined"
+    | "group_alert"
+    | "task_reminder";
   title: string;
   message: string;
   actionUrl?: string;
   read: boolean;
-  deliveryStatus: 'sent' | 'pending' | 'failed';
+  deliveryStatus: "sent" | "pending" | "failed";
   createdAt: Date;
 }
 ```
@@ -657,27 +709,32 @@ interface Notification {
 **Goal:** Complete core savings group functionality with payment integration
 
 1. **Week 1-2: Onboarding System**
+
    - BVN/NIN verification integration
    - Bank account linking
    - Face ID / Fingerprint integration
    - KYC checklist UI & logic
 
 2. **Week 3-4: Authentication & Wallet**
+
    - Backend auth service (JWT)
    - Wallet balance system
    - Payment gateway integration (deposits)
 
 3. **Week 5-6: Contribution & Escrow**
+
    - Contribution flow UI & backend
    - Escrow logic & tracking
    - Transaction receipts
 
 4. **Week 7-8: Payout System**
+
    - Payout scheduling
    - Fund releases
    - Payout notifications
 
 5. **Week 9-10: Real-Time Updates**
+
    - WebSocket for activity feed
    - Push notifications (FCM)
    - Activity bell notifications
@@ -694,17 +751,20 @@ interface Notification {
 ### Phase 2 (Phase 1 Complete Features): Weeks 13-20
 
 1. **ShuraBot Backend** (Weeks 13-14)
+
    - LLM integration (Claude/GPT)
    - Scenario analysis engine
    - Recommendation logic
 
 2. **Admin & Governance** (Weeks 15-16)
+
    - Admin dashboard
    - Member approval workflow
    - Payout rule editor
    - Automation setup
 
 3. **Sadaqah & Impact** (Weeks 17-18)
+
    - Sadaqah portion tracking
    - Beneficiary library
    - Impact reporting
@@ -730,12 +790,14 @@ interface Notification {
 ## Quality & Compliance Standards
 
 ### Performance Targets
+
 - **Dashboard load:** < 2s
 - **Payment flow:** < 3s
 - **API response:** < 500ms (p95)
 - **Mobile Lighthouse:** >85 (Performance, Accessibility, Best Practices)
 
 ### Security & Compliance
+
 - **KYC/AML:** Automated verification + manual review for high-value transfers
 - **Data Protection:** GDPR-ready (Lagos Data Privacy Law compliance)
 - **PCI DSS:** For payment processing (via third-party gateway)
@@ -743,17 +805,20 @@ interface Notification {
 - **Audit Logs:** All financial transactions logged for 7 years
 
 ### Accessibility (WCAG 2.1 AA)
+
 - Keyboard navigation on all pages
 - Screen reader support (ARIA labels)
 - Color contrast >4.5:1 for text
 - All forms have associated labels
 
 ### Localization
+
 - **Language:** English (MVP), Yoruba/Hausa/Igbo (Phase 2)
 - **Currencies:** NGN (MVP), Multi-currency (Phase 3)
 - **Date/Time Formats:** Locale-based
 
 ### Monitoring & Analytics
+
 - **Error Tracking:** Sentry for frontend errors
 - **Analytics:** Mixpanel for user behavior
 - **Uptime Monitoring:** 99.5% target
@@ -764,12 +829,14 @@ interface Notification {
 ## Enforcement & Amendments
 
 This constitution is binding for all development on Khalia. Deviations require:
+
 1. **Written Proposal** (describe change, rationale, impact)
 2. **Architecture Review** (technical feasibility)
 3. **Stakeholder Approval** (product, engineering, compliance)
 4. **Amendment Citation** (reference this document with version bump)
 
 **Version History:**
+
 - v1.0: April 20, 2026 (Initial specification)
 
 ---

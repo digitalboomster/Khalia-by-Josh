@@ -28,7 +28,9 @@ All API responses follow this format:
 ```json
 {
   "success": true,
-  "data": { /* response payload */ },
+  "data": {
+    /* response payload */
+  },
   "error": null,
   "requestId": "uuid"
 }
@@ -53,6 +55,7 @@ Error responses:
 ### Authentication (T057-T058)
 
 #### Register User
+
 ```
 POST /auth/register
 Content-Type: application/json
@@ -81,6 +84,7 @@ Response: 201
 ```
 
 #### Login
+
 ```
 POST /auth/login
 Content-Type: application/json
@@ -99,6 +103,7 @@ Response: 200
 ```
 
 #### Refresh Token
+
 ```
 POST /auth/refresh
 Authorization: Bearer <refresh_token>
@@ -111,6 +116,7 @@ Response: 200
 ```
 
 #### Get Profile
+
 ```
 GET /auth/me
 Authorization: Bearer <access_token>
@@ -131,6 +137,7 @@ Response: 200
 ### KYC Verification (T059-T063)
 
 #### Verify BVN
+
 ```
 POST /kyc/verify-bvn
 Authorization: Bearer <access_token>
@@ -155,6 +162,7 @@ Response: 200
 ```
 
 #### Verify Biometric (Facial Recognition)
+
 ```
 POST /kyc/verify-biometric
 Authorization: Bearer <access_token>
@@ -174,6 +182,7 @@ Response: 200
 ```
 
 #### Verify Bank Account
+
 ```
 POST /kyc/verify-bank
 Authorization: Bearer <access_token>
@@ -195,6 +204,7 @@ Response: 200
 ```
 
 #### Get KYC Status
+
 ```
 GET /kyc/status
 Authorization: Bearer <access_token>
@@ -219,6 +229,7 @@ Response: 200
 ### Wallet Operations (T070-T076)
 
 #### Create Deposit Link
+
 ```
 POST /wallet/deposit
 Authorization: Bearer <access_token>
@@ -239,6 +250,7 @@ Response: 200
 ```
 
 #### Get Wallet Balance
+
 ```
 GET /wallet/balance
 Authorization: Bearer <access_token>
@@ -253,6 +265,7 @@ Response: 200
 ```
 
 #### Request Withdrawal
+
 ```
 POST /wallet/withdraw
 Authorization: Bearer <access_token>
@@ -272,6 +285,7 @@ Response: 200
 ```
 
 #### List Transactions
+
 ```
 GET /wallet/transactions?limit=20&offset=0
 Authorization: Bearer <access_token>
@@ -293,6 +307,7 @@ Response: 200
 ```
 
 #### Get Transaction Details
+
 ```
 GET /wallet/transactions/{transaction_id}
 Authorization: Bearer <access_token>
@@ -315,6 +330,7 @@ Response: 200
 ### Groups & Contributions (T077-T085)
 
 #### Create Group
+
 ```
 POST /groups
 Authorization: Bearer <access_token>
@@ -341,6 +357,7 @@ Response: 201
 ```
 
 #### Get Group Details
+
 ```
 GET /groups/{group_id}
 Authorization: Bearer <access_token>
@@ -376,6 +393,7 @@ Response: 200
 ```
 
 #### Join Group
+
 ```
 POST /groups/{group_id}/join
 Authorization: Bearer <access_token>
@@ -389,6 +407,7 @@ Response: 200
 ```
 
 #### Start Contribution Cycle
+
 ```
 POST /groups/{group_id}/start-cycle
 Authorization: Bearer <access_token>
@@ -403,6 +422,7 @@ Response: 200
 ```
 
 #### Record Contribution
+
 ```
 POST /groups/{group_id}/contribute
 Authorization: Bearer <access_token>
@@ -422,6 +442,7 @@ Response: 200
 ```
 
 #### Get Payout Info
+
 ```
 GET /groups/{group_id}/payout-info
 Authorization: Bearer <access_token>
@@ -443,6 +464,7 @@ Response: 200
 ### Trust Score (T086-T087)
 
 #### Get Trust Score
+
 ```
 GET /trust-score
 Authorization: Bearer <access_token>
@@ -466,6 +488,7 @@ Response: 200
 ### Notifications (T091-T094)
 
 #### Get Notifications
+
 ```
 GET /notifications?limit=20&offset=0
 Authorization: Bearer <access_token>
@@ -488,6 +511,7 @@ Response: 200
 ```
 
 #### Mark as Read
+
 ```
 POST /notifications/{notification_id}/read
 Authorization: Bearer <access_token>
@@ -500,6 +524,7 @@ Response: 200
 ```
 
 #### Mark All as Read
+
 ```
 POST /notifications/read-all
 Authorization: Bearer <access_token>
@@ -513,6 +538,7 @@ Response: 200
 ### Admin Routes (T088-T090)
 
 #### Get System Analytics
+
 ```
 GET /admin/analytics
 Authorization: Bearer <admin_token>
@@ -539,6 +565,7 @@ Response: 200
 ```
 
 #### Manage User KYC
+
 ```
 POST /admin/users/{user_id}/kyc
 Authorization: Bearer <admin_token>
@@ -558,6 +585,7 @@ Response: 200
 ```
 
 #### Manage Payout
+
 ```
 POST /admin/payouts/{payout_id}
 Authorization: Bearer <admin_token>
@@ -578,21 +606,21 @@ Response: 200
 
 ## Error Codes
 
-| Code | Status | Description |
-|------|--------|-------------|
-| `VALIDATION_ERROR` | 400 | Request validation failed |
-| `AUTHENTICATION_ERROR` | 401 | Invalid or missing credentials |
-| `UNAUTHORIZED` | 401 | Token expired or invalid |
-| `FORBIDDEN` | 403 | Insufficient permissions |
-| `NOT_FOUND` | 404 | Resource not found |
-| `CONFLICT` | 409 | Resource already exists |
-| `INSUFFICIENT_BALANCE` | 400 | Wallet balance insufficient |
-| `KYC_INCOMPLETE` | 400 | KYC verification incomplete |
-| `BANK_NOT_VERIFIED` | 400 | Bank account not verified |
-| `GROUP_FULL` | 400 | Group is at max capacity |
-| `ALREADY_MEMBER` | 400 | User is already a member |
-| `PENDING_CONTRIBUTIONS` | 400 | Cannot leave group with pending contributions |
-| `SERVER_ERROR` | 500 | Internal server error |
+| Code                    | Status | Description                                   |
+| ----------------------- | ------ | --------------------------------------------- |
+| `VALIDATION_ERROR`      | 400    | Request validation failed                     |
+| `AUTHENTICATION_ERROR`  | 401    | Invalid or missing credentials                |
+| `UNAUTHORIZED`          | 401    | Token expired or invalid                      |
+| `FORBIDDEN`             | 403    | Insufficient permissions                      |
+| `NOT_FOUND`             | 404    | Resource not found                            |
+| `CONFLICT`              | 409    | Resource already exists                       |
+| `INSUFFICIENT_BALANCE`  | 400    | Wallet balance insufficient                   |
+| `KYC_INCOMPLETE`        | 400    | KYC verification incomplete                   |
+| `BANK_NOT_VERIFIED`     | 400    | Bank account not verified                     |
+| `GROUP_FULL`            | 400    | Group is at max capacity                      |
+| `ALREADY_MEMBER`        | 400    | User is already a member                      |
+| `PENDING_CONTRIBUTIONS` | 400    | Cannot leave group with pending contributions |
+| `SERVER_ERROR`          | 500    | Internal server error                         |
 
 ## Rate Limiting
 
@@ -637,6 +665,7 @@ npm start
 ## Database Schema
 
 See [data-model.md](../data-model.md) for complete schema documentation including:
+
 - Users table (KYC state machine)
 - Groups & GroupMembers
 - Contributions & Transactions

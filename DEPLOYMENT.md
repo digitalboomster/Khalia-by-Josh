@@ -22,6 +22,7 @@
 ## Pre-Deployment Checklist
 
 ### Code Quality
+
 - [ ] All tests passing: `npm test`
 - [ ] No console errors/warnings
 - [ ] TypeScript strict mode enabled
@@ -30,6 +31,7 @@
 - [ ] Secrets NOT in code (use .env files)
 
 ### Security
+
 - [ ] All passwords hashed with bcrypt
 - [ ] JWT secrets are 32+ characters
 - [ ] CORS properly configured
@@ -40,6 +42,7 @@
 - [ ] Sensitive data encrypted at rest
 
 ### Performance
+
 - [ ] Database indexes created
 - [ ] No N+1 queries
 - [ ] API response time < 500ms
@@ -49,6 +52,7 @@
 - [ ] Minification enabled
 
 ### Compliance
+
 - [ ] Privacy policy written
 - [ ] Terms of service written
 - [ ] GDPR compliance checklist
@@ -60,6 +64,7 @@
 ### Option 1: AWS Deployment (Recommended)
 
 #### 1. Create AWS Account
+
 ```bash
 # Sign up at: https://aws.amazon.com
 # Create IAM user with programmatic access
@@ -86,6 +91,7 @@ aws rds describe-db-instances \
 ```
 
 **Database Details:**
+
 - Engine: PostgreSQL 14+
 - Instance Type: db.t3.micro (free tier eligible)
 - Storage: 20GB (auto-scaling enabled)
@@ -110,6 +116,7 @@ aws elasticache describe-cache-clusters \
 ```
 
 **Redis Details:**
+
 - Engine: Redis 7.0+
 - Node Type: cache.t3.micro
 - Parameter Group: Default (snapshotting enabled)
@@ -142,6 +149,7 @@ aws ec2 run-instances \
 ```
 
 **EC2 Details:**
+
 - AMI: Ubuntu 22.04 LTS
 - Instance Type: t3.micro (free tier eligible)
 - Storage: 30GB EBS (gp3)
@@ -169,6 +177,7 @@ aws s3 website s3://khalia-app-prod \
 ### Option 2: Vercel + Railway (Simpler Alternative)
 
 #### Frontend on Vercel
+
 ```bash
 # Login to Vercel
 npm i -g vercel
@@ -182,6 +191,7 @@ vercel env add REACT_APP_API_URL https://api.khalia.app
 ```
 
 #### Backend on Railway
+
 ```bash
 # Sign up: https://railway.app
 # Connect GitHub repository
@@ -602,7 +612,7 @@ if (!user) {
 await redis.setex(`kyc:${userId}`, 1800, JSON.stringify(kycStatus));
 
 // Monitor cache hit ratio
-redis.info('stats');  // hits vs misses
+redis.info("stats"); // hits vs misses
 ```
 
 ### CDN Configuration
@@ -610,7 +620,7 @@ redis.info('stats');  // hits vs misses
 ```bash
 # CloudFront settings
 # - Compress: Enable Gzip/Brotli
-# - Cache behavior: 
+# - Cache behavior:
 #   * Static assets: 1 year
 #   * HTML: 1 hour
 #   * API: No cache

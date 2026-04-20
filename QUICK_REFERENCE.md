@@ -3,12 +3,14 @@
 ## 🚀 Getting Started (Choose One)
 
 ### Option 1: Automatic Setup (Recommended)
+
 ```bash
 chmod +x startup.sh && ./startup.sh
 # Opens http://localhost:5173 automatically
 ```
 
 ### Option 2: Manual Frontend + Backend
+
 ```bash
 # Terminal 1 - Backend
 cd backend
@@ -17,11 +19,12 @@ npm run migrate:latest
 npm run dev
 
 # Terminal 2 - Frontend
-npm install  
+npm install
 npm run dev
 ```
 
 ### Option 3: Docker (All Services)
+
 ```bash
 docker-compose up -d
 # PostgreSQL: localhost:5432
@@ -35,6 +38,7 @@ docker-compose up -d
 ## 🧪 Testing Quick Commands
 
 ### Run Backend Tests
+
 ```bash
 cd backend
 npm test              # All tests
@@ -43,6 +47,7 @@ npm run test:coverage # Coverage report
 ```
 
 ### Manual Frontend Test
+
 ```
 1. Open http://localhost:5173
 2. Sign up: test@khalia.com / Test1234!
@@ -51,6 +56,7 @@ npm run test:coverage # Coverage report
 ```
 
 ### Test API with cURL
+
 ```bash
 # Register user
 curl -X POST http://localhost:3000/api/v1/auth/register \
@@ -68,6 +74,7 @@ curl -X GET http://localhost:3000/api/v1/auth/me \
 ```
 
 ### Test in Postman
+
 ```
 1. Import: backend/API.md
 2. Set base_url: http://localhost:3000/api/v1
@@ -81,6 +88,7 @@ curl -X GET http://localhost:3000/api/v1/auth/me \
 ## 📝 Development Commands
 
 ### Frontend
+
 ```bash
 npm run dev          # Start dev server (port 5173)
 npm run build        # Production build
@@ -89,6 +97,7 @@ npm run lint         # Check code style
 ```
 
 ### Backend
+
 ```bash
 npm run dev          # Start dev server (port 3000)
 npm run build        # Compile TypeScript
@@ -102,6 +111,7 @@ npm run seed         # Seed test data
 ## 🔧 Common Issues & Fixes
 
 ### Port Already in Use
+
 ```bash
 # Kill process on port 5173 (frontend)
 lsof -ti:5173 | xargs kill -9
@@ -111,6 +121,7 @@ lsof -ti:3000 | xargs kill -9
 ```
 
 ### Database Issues
+
 ```bash
 # Create database
 createdb khalia_dev
@@ -127,6 +138,7 @@ psql khalia_dev
 ```
 
 ### Redis Not Running
+
 ```bash
 # macOS
 brew services start redis
@@ -139,6 +151,7 @@ redis-cli ping  # Should return PONG
 ```
 
 ### PostgreSQL Not Running
+
 ```bash
 # macOS
 brew services start postgresql
@@ -188,15 +201,15 @@ GROUP BY u.id
 LIMIT 5;
 
 -- Get wallet balances
-SELECT u.email, 
+SELECT u.email,
   SUM(CASE WHEN l.entry_type = 'debit' THEN -l.amount ELSE l.amount END) as balance
 FROM users u
 JOIN ledger_entries l ON u.id = l.user_id
 GROUP BY u.id;
 
 -- Get recent transactions
-SELECT * FROM transactions 
-ORDER BY created_at DESC 
+SELECT * FROM transactions
+ORDER BY created_at DESC
 LIMIT 20;
 
 -- Find high-value groups
@@ -211,6 +224,7 @@ ORDER BY contribution_amount DESC;
 ## 📊 Environment Variables
 
 ### Backend (.env)
+
 ```env
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/khalia_dev
 REDIS_URL=redis://localhost:6379
@@ -223,6 +237,7 @@ CORS_ORIGIN=http://localhost:5173
 ```
 
 ### Frontend (.env.local)
+
 ```env
 REACT_APP_API_URL=http://localhost:3000/api/v1
 ```
@@ -232,6 +247,7 @@ REACT_APP_API_URL=http://localhost:3000/api/v1
 ## 📱 Mobile Testing
 
 ### Responsive Design
+
 ```
 1. Open DevTools (F12)
 2. Click device toggle (Ctrl+Shift+M)
@@ -240,6 +256,7 @@ REACT_APP_API_URL=http://localhost:3000/api/v1
 ```
 
 ### Common Breakpoints
+
 - Mobile: < 640px
 - Tablet: 640px - 1024px
 - Desktop: > 1024px
@@ -263,6 +280,7 @@ REACT_APP_API_URL=http://localhost:3000/api/v1
 ## 📈 Performance Tips
 
 ### Database Optimization
+
 ```bash
 # Check slow queries
 cd backend
@@ -272,6 +290,7 @@ EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@khalia.com';
 ```
 
 ### Frontend Performance
+
 ```bash
 # Build analysis
 npm run build
@@ -287,6 +306,7 @@ npm run preview
 ## 🚀 Deployment Quick Steps
 
 ### to Vercel (Frontend)
+
 ```bash
 npm install -g vercel
 vercel login
@@ -294,6 +314,7 @@ vercel --prod
 ```
 
 ### to Railway (Backend)
+
 ```bash
 # 1. Create account at railway.app
 # 2. Connect GitHub repo
@@ -302,6 +323,7 @@ vercel --prod
 ```
 
 ### to AWS (Complete)
+
 ```bash
 # See DEPLOYMENT.md for detailed steps
 # Summary: RDS + ElastiCache + EC2 + CloudFront
@@ -311,13 +333,13 @@ vercel --prod
 
 ## 📚 Documentation
 
-| File | Contents |
-|------|----------|
-| [README.md](./README.md) | Project overview |
-| [TESTING.md](./TESTING.md) | Complete testing guide |
-| [DEPLOYMENT.md](./DEPLOYMENT.md) | Production deployment |
-| [backend/API.md](./backend/API.md) | API endpoint docs |
-| [specs/](./specs/001-mvp-implementation-plan/) | Architecture docs |
+| File                                           | Contents               |
+| ---------------------------------------------- | ---------------------- |
+| [README.md](./README.md)                       | Project overview       |
+| [TESTING.md](./TESTING.md)                     | Complete testing guide |
+| [DEPLOYMENT.md](./DEPLOYMENT.md)               | Production deployment  |
+| [backend/API.md](./backend/API.md)             | API endpoint docs      |
+| [specs/](./specs/001-mvp-implementation-plan/) | Architecture docs      |
 
 ---
 
@@ -339,6 +361,7 @@ After testing, verify:
 ## 💡 Pro Tips
 
 ### Debugging Frontend
+
 ```bash
 # Enable React DevTools
 # Chrome: React Developer Tools extension
@@ -349,6 +372,7 @@ After testing, verify:
 ```
 
 ### Debugging Backend
+
 ```bash
 # View logs in real-time
 tail -f /tmp/khalia-backend.log
@@ -363,6 +387,7 @@ console.log('DEBUG:', data);
 ```
 
 ### Fast Testing
+
 ```bash
 # Use mock data for quick tests
 # backend/src/data/mockData.ts
@@ -378,14 +403,14 @@ console.log('DEBUG:', data);
 
 ## ⚡ Quick Fixes
 
-| Issue | Fix |
-|-------|-----|
-| "Cannot find module" | `npm install` |
-| Port in use | `lsof -ti:<port> \| xargs kill -9` |
-| DB connection error | `psql -U postgres -c "SELECT 1"` |
-| Token expired | Clear localStorage, login again |
-| CORS error | Check CORS_ORIGIN in backend .env |
-| Blank dashboard | Check browser console for errors |
+| Issue                | Fix                                |
+| -------------------- | ---------------------------------- |
+| "Cannot find module" | `npm install`                      |
+| Port in use          | `lsof -ti:<port> \| xargs kill -9` |
+| DB connection error  | `psql -U postgres -c "SELECT 1"`   |
+| Token expired        | Clear localStorage, login again    |
+| CORS error           | Check CORS_ORIGIN in backend .env  |
+| Blank dashboard      | Check browser console for errors   |
 
 ---
 

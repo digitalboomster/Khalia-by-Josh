@@ -1,35 +1,4 @@
 {
-  "name": "khalia-mvp",
-  "version": "1.0.0",
-  "description": "Khalia MVP - Community-Based Microfinance Platform",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "npm run dev --workspace=frontend & npm run dev --workspace=backend",
-    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
-    "start": "npm run start --workspace=backend",
-    "test": "npm run test --workspace=backend",
-    "test:watch": "npm run test:watch --workspace=backend",
-    "frontend:dev": "npm run dev --workspace=frontend",
-    "frontend:build": "npm run build --workspace=frontend",
-    "backend:dev": "npm run dev --workspace=backend",
-    "backend:build": "npm run build --workspace=backend",
-    "backend:test": "npm run test --workspace=backend",
-    "backend:migrate": "npm run migrate:latest --workspace=backend"
-  },
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
-  "keywords": ["fintech", "savings", "groups", "khalia", "microfinance"],
-  "author": "Khalia Team",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
-  }
-}
-{
   "name": "@figma/my-make-file",
   "private": true,
   "version": "0.0.1",

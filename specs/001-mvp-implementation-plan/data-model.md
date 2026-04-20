@@ -11,12 +11,14 @@
 ## Overview
 
 The data model defines all core entities for the Khalia MVP platform. Designed for:
+
 - Immutable financial audit trail (double-entry ledger)
 - KYC/AML state machine tracking
 - Group-based contribution cycles
 - Zero-discrepancy transaction reconciliation
 
 **Key Principles**:
+
 - 🔐 **Immutable**: Transactions never deleted, only voided/reversed
 - 📊 **Double-Entry**: Every transaction has debit/credit pair (balance always correct)
 - 🔒 **Encrypted**: BVN, NIN, bank accounts encrypted at rest
@@ -36,55 +38,55 @@ CREATE TABLE users (
   email VARCHAR(255) NOT NULL UNIQUE,
   phone_number VARCHAR(20) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  
+
   -- KYC/AML State
   kyc_status VARCHAR(50) NOT NULL DEFAULT 'not_started'
-    CHECK (kyc_status IN ('not_started', 'email_verified', 'phone_verified', 
+    CHECK (kyc_status IN ('not_started', 'email_verified', 'phone_verified',
            'bvn_verified', 'biometric_verified', 'bank_verified', 'approved', 'rejected')),
   kyc_level INT NOT NULL DEFAULT 1,
     COMMENT '1=unverified, 2=basic, 3=full, 4=premium',
-  
+
   -- Verified Identity (encrypted)
   bvn_hash VARCHAR(255),
   nin_hash VARCHAR(255),
   first_name VARCHAR(100),
   last_name VARCHAR(100),
   date_of_birth DATE,
-  
+
   -- Bank Account (encrypted)
   bank_account_name VARCHAR(255),
   bank_account_number VARCHAR(20),
   bank_code VARCHAR(10),
   bank_account_verified BOOLEAN DEFAULT false,
-  
+
   -- Biometric (tokenized, never plaintext)
   biometric_token VARCHAR(255),
     COMMENT 'Encrypted hash of facial recognition template',
-  
+
   -- Trust & Reputation
   trust_score INT NOT NULL DEFAULT 20,
     COMMENT 'Starting trust: 20%, increases with activity',
   trust_score_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  
+
   -- Compliance
   aml_risk_level VARCHAR(50) NOT NULL DEFAULT 'low'
     CHECK (aml_risk_level IN ('low', 'medium', 'high', 'blocked')),
   aml_checked_at TIMESTAMP,
   sanctions_screened_at TIMESTAMP,
-  
+
   -- Contact Preferences
   email_notifications BOOLEAN DEFAULT true,
   sms_notifications BOOLEAN DEFAULT false,
-  
+
   -- Profile
   profile_picture_url VARCHAR(500),
   bio TEXT,
-  
+
   -- Timestamps
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   deleted_at TIMESTAMP,
-  
+
   -- Indexes
   INDEX idx_email (email),
   INDEX idx_phone (phone_number),
@@ -95,6 +97,7 @@ CREATE TABLE users (
 ```
 
 **Key Fields**:
+
 - `kyc_status`: State machine for verification progression
 - `trust_score`: Algorithm-calculated, 20-100 scale
 - `bvn_hash`, `nin_hash`: Salted hashes, never store plaintext
@@ -111,13 +114,13 @@ CREATE TABLE users (
 CREATE TABLE groups (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   creator_id UUID NOT NULL REFERENCES users(id),
-  
+
   -- Meta
   name VARCHAR(255) NOT NULL,
   description TEXT,
   goal VARCHAR(255), -- e.g., "Buy group transportation"
   logo_url VARCHAR(500),
-  
+
   -- Contribution Schedule
   contribution_amount_naira INT NOT NULL,
     COMMENT 'Amount in naira (no decimals to avoid float errors)',
@@ -125,27 +128,27 @@ CREATE TABLE groups (
     CHECK (contribution_frequency IN ('weekly', 'biweekly', 'monthly')),
   contribution_due_day INT,
     COMMENT 'Day of week (0-6) or month (1-31)',
-  
+
   -- Governance
   max_members INT NOT NULL DEFAULT 10,
   current_member_count INT NOT NULL DEFAULT 1,
   payout_order VARCHAR(50) NOT NULL
     CHECK (payout_order IN ('round_robin', 'manual', 'lottery', 'seniority')),
-  
+
   -- Compliance
   is_shariah_compliant BOOLEAN DEFAULT true,
     COMMENT 'No interest-based lending, Islamic principles',
   requires_approval BOOLEAN DEFAULT true,
-  
+
   -- Status
   status VARCHAR(50) NOT NULL DEFAULT 'active'
     CHECK (status IN ('active', 'paused', 'completed', 'dissolved')),
-  
+
   -- Timestamps
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   deleted_at TIMESTAMP,
-  
+
   INDEX idx_creator_id (creator_id),
   INDEX idx_status (status),
   INDEX idx_created_at (created_at)
@@ -153,6 +156,7 @@ CREATE TABLE groups (
 ```
 
 **Key Fields**:
+
 - `contribution_amount_naira`: Stored as INT (no floats for money)
 - `contribution_frequency` + `contribution_due_day`: Cron-like schedule
 - `payout_order`: Determines recipient sequence
@@ -169,34 +173,35 @@ CREATE TABLE group_members (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   group_id UUID NOT NULL REFERENCES groups(id),
   user_id UUID NOT NULL REFERENCES users(id),
-  
+
   -- Role & Status
   role VARCHAR(50) NOT NULL DEFAULT 'member'
     CHECK (role IN ('creator', 'admin', 'member')),
   status VARCHAR(50) NOT NULL DEFAULT 'pending'
     CHECK (status IN ('pending', 'active', 'suspended', 'removed')),
-  
+
   -- Individual Trust
   individual_trust_score INT DEFAULT 0,
     COMMENT 'Member-specific trust in this group',
-  
+
   -- Payout Info
   payout_order INT,
     COMMENT 'Position in rotation (1, 2, 3...)',
   payout_recipient_bank_account VARCHAR(255),
     COMMENT 'Can differ from user profile bank account',
-  
+
   -- Timeline
   joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   approved_at TIMESTAMP,
   left_at TIMESTAMP,
-  
+
   INDEX idx_group_user (group_id, user_id) UNIQUE,
   INDEX idx_status (status)
 );
 ```
 
 **Key Fields**:
+
 - `role`: Creator > Admin > Member permission hierarchy
 - `payout_order`: Position in contribution rotation
 - `individual_trust_score`: Group-specific reputation
@@ -213,22 +218,22 @@ CREATE TABLE contributions (
   group_id UUID NOT NULL REFERENCES groups(id),
   user_id UUID NOT NULL REFERENCES users(id),
   group_member_id UUID NOT NULL REFERENCES group_members(id),
-  
+
   -- Amount & Status
   amount_naira INT NOT NULL,
   status VARCHAR(50) NOT NULL DEFAULT 'pending'
     CHECK (status IN ('pending', 'paid', 'overdue', 'waived', 'refunded')),
-  
+
   -- Payment Tracking
   payment_method VARCHAR(50),
     CHECK (payment_method IN ('card', 'bank_transfer', 'wallet', 'ussd', 'cash')),
   payment_reference VARCHAR(255),
     COMMENT 'Payment gateway transaction ID',
-  
+
   -- Dates
   due_date DATE NOT NULL,
   paid_at TIMESTAMP,
-  
+
   INDEX idx_group_user_due (group_id, user_id, due_date),
   INDEX idx_status (status),
   INDEX idx_due_date (due_date)
@@ -236,6 +241,7 @@ CREATE TABLE contributions (
 ```
 
 **Key Fields**:
+
 - `due_date`: When contribution is due (auto-generated from group schedule)
 - `status`: Tracks payment lifecycle (pending → paid)
 - `payment_reference`: Links to payment gateway transaction
@@ -250,17 +256,17 @@ CREATE TABLE contributions (
 ```sql
 CREATE TABLE transactions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Type & Amount
   type VARCHAR(50) NOT NULL
     CHECK (type IN ('deposit', 'withdrawal', 'contribution', 'payout', 'transfer', 'reversal')),
   amount_naira INT NOT NULL,
-  
+
   -- Actor & Context
   user_id UUID NOT NULL REFERENCES users(id),
   group_id UUID REFERENCES groups(id),
   initiated_by_user BOOLEAN NOT NULL DEFAULT true,
-  
+
   -- Payment Gateway
   payment_gateway VARCHAR(50),
     CHECK (payment_gateway IN ('paystack', 'flutterwave', 'remita', 'manual', 'bank')),
@@ -268,20 +274,20 @@ CREATE TABLE transactions (
     COMMENT 'External gateway or bank reference',
   payment_status VARCHAR(50) DEFAULT 'pending'
     CHECK (payment_status IN ('pending', 'processing', 'confirmed', 'failed', 'reversed')),
-  
+
   -- Status & Audit
   status VARCHAR(50) NOT NULL DEFAULT 'pending'
     CHECK (status IN ('pending', 'processing', 'completed', 'failed', 'cancelled')),
   failure_reason TEXT,
-  
+
   -- Idempotency Key (prevent duplicate charges)
   idempotency_key VARCHAR(255) UNIQUE,
-  
+
   -- Timestamps
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   confirmed_at TIMESTAMP,
   failed_at TIMESTAMP,
-  
+
   INDEX idx_user_type (user_id, type),
   INDEX idx_status (status),
   INDEX idx_payment_reference (payment_reference)
@@ -289,6 +295,7 @@ CREATE TABLE transactions (
 ```
 
 **Key Fields**:
+
 - `type`: Categorizes transaction purpose
 - `payment_gateway`: Tracks which processor handled it
 - `idempotency_key`: Prevents double-charging if request retried
@@ -303,34 +310,34 @@ CREATE TABLE transactions (
 ```sql
 CREATE TABLE ledger (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Double-Entry Pair
   debit_credit_type VARCHAR(50) NOT NULL
     CHECK (debit_credit_type IN ('debit', 'credit')),
   amount_naira INT NOT NULL,
     COMMENT 'Always positive; debit/credit type determines sign',
-  
+
   -- Account Context
   account_type VARCHAR(50) NOT NULL
     CHECK (account_type IN ('wallet', 'escrow', 'Group_holding', 'expense', 'revenue', 'suspense')),
   user_id UUID REFERENCES users(id),
   group_id UUID REFERENCES groups(id),
-  
+
   -- Reference to Original Transaction
   transaction_id UUID REFERENCES transactions(id),
   contribution_id UUID REFERENCES contributions(id),
   reference_type VARCHAR(50),
   reference_id VARCHAR(255),
     COMMENT '{"type": "deposit", "id": "txn_123", ...}',
-  
+
   -- Reconciliation
   reconciliation_batch_id UUID,
     COMMENT 'Links to daily/monthly reconciliation run',
-  
+
   -- Immutability
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created_by_user_id UUID REFERENCES users(id),
-  
+
   -- Never Modify These Fields
   PRIMARY KEY (id),
   INDEX idx_account (account_type, user_id, group_id),
@@ -343,25 +350,26 @@ CREATE TABLE ledger (
 CREATE TABLE ledger_reconciliation (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   reconciliation_date DATE NOT NULL UNIQUE,
-  
+
   -- Totals
   total_debits INT NOT NULL,
   total_credits INT NOT NULL,
-  
+
   -- Verification
   is_balanced BOOLEAN NOT NULL,
   discrepancies_found INT NOT NULL DEFAULT 0,
   discrepancy_notes TEXT,
-  
+
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   verified_by_user_id UUID REFERENCES users(id),
-  
+
   INDEX idx_date (reconciliation_date),
   INDEX idx_balanced (is_balanced)
 );
 ```
 
 **Key Fields**:
+
 - `debit_credit_type`: Indicates direction (always use positive amounts)
 - `account_type`: Which ledger account this affects
 - `transaction_id`: Links to source transaction
@@ -377,25 +385,25 @@ CREATE TABLE ledger_reconciliation (
 ```sql
 CREATE TABLE escrow (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Relationship
   group_id UUID NOT NULL REFERENCES groups(id),
   contribution_id UUID NOT NULL REFERENCES contributions(id),
   user_id UUID NOT NULL REFERENCES users(id),
-  
+
   -- Amount
   amount_naira INT NOT NULL,
   status VARCHAR(50) NOT NULL DEFAULT 'held'
     CHECK (status IN ('held', 'released', 'refunded', 'cancelled')),
-  
+
   -- Release Conditions
   release_reason VARCHAR(50),
     CHECK (release_reason IN ('payout_executed', 'contribution_cancelled', 'manual_override')),
-  
+
   -- Dates
   held_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   released_at TIMESTAMP,
-  
+
   INDEX idx_group (group_id),
   INDEX idx_user (user_id),
   INDEX idx_status (status)
@@ -403,7 +411,7 @@ CREATE TABLE escrow (
 
 -- Escrow Summary View: Calculate total locked per user
 CREATE VIEW user_escrow_total AS
-SELECT 
+SELECT
   user_id,
   SUM(amount_naira) as total_locked_naira,
   COUNT(*) as held_contribution_count
@@ -413,6 +421,7 @@ GROUP BY user_id;
 ```
 
 **Key Fields**:
+
 - `contribution_id`: Links to specific contribution being escrowed
 - `status`: Tracks if funds are locked, released, or refunded
 - `release_reason`: Audit trail for why funds released
@@ -429,32 +438,32 @@ CREATE TABLE payout_cycles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   group_id UUID NOT NULL REFERENCES groups(id),
   recipient_user_id UUID NOT NULL REFERENCES users(id),
-  
+
   -- Amount & Status
   amount_naira INT NOT NULL,
   payout_sequence INT NOT NULL,
     COMMENT 'First payout = 1, second = 2, etc.',
-  
+
   -- State Machine
   status VARCHAR(50) NOT NULL DEFAULT 'pending_approval'
     CHECK (status IN ('pending_approval', 'approved', 'processing', 'settled', 'failed', 'cancelled')),
-  
+
   -- Admin Approval
   approved_by_user_id UUID REFERENCES users(id),
   approved_at TIMESTAMP,
   approval_notes TEXT,
-  
+
   -- Settlement
   settlement_method VARCHAR(50) NOT NULL
     CHECK (settlement_method IN ('bank_transfer', 'wallet_credit', 'check', 'cash')),
   settlement_reference VARCHAR(255),
     COMMENT 'Bank reference number',
   settled_at TIMESTAMP,
-  
+
   -- Dates
   scheduled_date DATE NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  
+
   INDEX idx_group (group_id),
   INDEX idx_recipient (recipient_user_id),
   INDEX idx_status (status),
@@ -463,6 +472,7 @@ CREATE TABLE payout_cycles (
 ```
 
 **Key Fields**:
+
 - `payout_sequence`: Tracks which round (1st, 2nd payout) in group
 - `status`: State machine for payout lifecycle
 - Full approval workflow audit trail timestamped
@@ -477,30 +487,30 @@ CREATE TABLE payout_cycles (
 CREATE TABLE notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES users(id),
-  
+
   -- Content
   type VARCHAR(50) NOT NULL
-    CHECK (type IN ('contribution_due', 'contribution_paid', 'payout_ready', 
+    CHECK (type IN ('contribution_due', 'contribution_paid', 'payout_ready',
            'member_joined', 'group_created', 'kyc_progress', 'alert')),
   title VARCHAR(255) NOT NULL,
   message TEXT NOT NULL,
-  
+
   -- Action
   action_url VARCHAR(500),
   action_type VARCHAR(50),
-  
+
   -- Channels
   email_sent BOOLEAN DEFAULT false,
   email_sent_at TIMESTAMP,
   sms_sent BOOLEAN DEFAULT false,
   sms_sent_at TIMESTAMP,
-  
+
   -- Status
   is_read BOOLEAN DEFAULT false,
   read_at TIMESTAMP,
-  
+
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  
+
   INDEX idx_user (user_id),
   INDEX idx_type (type),
   INDEX idx_read (is_read)
@@ -508,6 +518,7 @@ CREATE TABLE notifications (
 ```
 
 **Key Fields**:
+
 - `type`: Categories for filtering
 - `email_sent`, `sms_sent`: Track delivery channels
 - `is_read`: User engagement tracking
@@ -521,7 +532,7 @@ CREATE TABLE notifications (
 ```sql
 CREATE TABLE audit_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  
+
   -- Action & Actor
   action VARCHAR(100) NOT NULL,
     CHECK (action IN ('user_login', 'kyc_verified', 'contribution_paid', 'payout_executed',
@@ -529,22 +540,22 @@ CREATE TABLE audit_logs (
   actor_user_id UUID REFERENCES users(id),
   actor_type VARCHAR(50) NOT NULL
     CHECK (actor_type IN ('user', 'admin', 'system', 'external')),
-  
+
   -- Resource
   resource_type VARCHAR(100),
   resource_id VARCHAR(255),
-  
+
   -- Details (JSON)
   before_state JSONB,
   after_state JSONB,
-  
+
   -- Context
   ip_address INET,
   user_agent TEXT,
-  
+
   -- Immutable
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  
+
   INDEX idx_actor (actor_user_id),
   INDEX idx_action (action),
   INDEX idx_resource (resource_type, resource_id),
@@ -558,6 +569,7 @@ CREATE INDEX idx_audit_year ON audit_logs USING BRIN (created_at)
 ```
 
 **Key Fields**:
+
 - ALL FIELDS IMMUTABLE (never update after creation)
 - `before_state`, `after_state`: Full state change history
 - `actor_type`: Track if user, admin, or system action
@@ -654,16 +666,16 @@ backend/migrations/
 
 ### Required Indexes
 
-| Table | Columns | Purpose |
-|-------|---------|---------|
-| users | email, phone, kyc_status, trust_score | Fast lookup by identity |
-| groups | creator_id, status | Group discovery filtering |
-| group_members | (group_id, user_id), status | Member queries |
-| contributions | (group_id, user_id, due_date), status | Contribution schedules |
-| transactions | user_id, status, created_at | Transaction history |
-| ledger | (account_type, user_id), transaction_id | Reconciliation queries |
-| escrow | group_id, status | Escrow holds per group |
-| audit_logs | actor_user_id, action, created_at | Compliance reports |
+| Table         | Columns                                 | Purpose                   |
+| ------------- | --------------------------------------- | ------------------------- |
+| users         | email, phone, kyc_status, trust_score   | Fast lookup by identity   |
+| groups        | creator_id, status                      | Group discovery filtering |
+| group_members | (group_id, user_id), status             | Member queries            |
+| contributions | (group_id, user_id, due_date), status   | Contribution schedules    |
+| transactions  | user_id, status, created_at             | Transaction history       |
+| ledger        | (account_type, user_id), transaction_id | Reconciliation queries    |
+| escrow        | group_id, status                        | Escrow holds per group    |
+| audit_logs    | actor_user_id, action, created_at       | Compliance reports        |
 
 ### Slow Query Monitoring
 
@@ -677,13 +689,13 @@ backend/migrations/
 
 ### Fields Requiring Encryption
 
-| Field | Encryption | Storage |
-|-------|-----------|---------|
-| `bvn_hash` | Salted SHA256 | Database |
-| `nin_hash` | Salted SHA256 | Database |
-| `bank_account_number` | AES-256 | Database |
-| `biometric_token` | AES-256 + hash | Database (never retrieve plaintext) |
-| `password_hash` | bcrypt 12 rounds | Database |
+| Field                 | Encryption       | Storage                             |
+| --------------------- | ---------------- | ----------------------------------- |
+| `bvn_hash`            | Salted SHA256    | Database                            |
+| `nin_hash`            | Salted SHA256    | Database                            |
+| `bank_account_number` | AES-256          | Database                            |
+| `biometric_token`     | AES-256 + hash   | Database (never retrieve plaintext) |
+| `password_hash`       | bcrypt 12 rounds | Database                            |
 
 ### Key Rotation Strategy
 
