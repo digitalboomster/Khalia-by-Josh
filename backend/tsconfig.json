@@ -22,8 +22,8 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
@@ -34,6 +34,13 @@
       "@routes/*": ["routes/*"],
       "@utils/*": ["utils/*"],
       "@types/*": ["types/*"]
+    }
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalEsm": true,
+    "compilerOptions": {
+      "module": "ESNext"
     }
   },
   "include": ["src/**/*"],

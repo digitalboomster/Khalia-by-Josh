@@ -1,5 +1,5 @@
 import { Pool, PoolClient } from 'pg';
-import logger from './logger';
+import logger from './logger.js';
 
 interface PoolConfig {
   host: string;

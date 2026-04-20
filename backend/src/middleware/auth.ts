@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import logger from '@config/logger';
-import { KhaliaError } from './errorHandler';
+import { KhaliaError } from './errorHandler.js';
 
 interface RequestWithUser extends Request {
   user?: any;

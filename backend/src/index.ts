@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import app from './app';
+import app from './app.js';
 import database from '@config/database';
 import redis from '@config/redis';
 import logger from '@config/logger';

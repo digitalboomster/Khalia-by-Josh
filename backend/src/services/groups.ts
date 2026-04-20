@@ -1,7 +1,7 @@
 import logger from '@config/logger';
 import database from '@config/database';
 import { KhaliaError } from '@middleware/errorHandler';
-import ledgerService from './ledger';
+import ledgerService from './ledger.js';
 import { v4 as uuidv4 } from 'uuid';
 
 interface GroupCreationPayload {
