@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '@components/ui/button';
+import { Input } from '@components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { useNavigate, Link } from 'react-router';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@context/AuthContext';
 import { AlertCircle, Loader } from 'lucide-react';
 
 export default function RegisterPage() {
@@ -27,12 +27,29 @@ export default function RegisterPage() {
     });
   };
 
+  const validatePassword = (password: string): string | null => {
+    if (password.length < 12) return 'Password must be at least 12 characters';
+    if (!/[A-Z]/.test(password)) return 'Password must contain uppercase letter';
+    if (!/[a-z]/.test(password)) return 'Password must contain lowercase letter';
+    if (!/\d/.test(password)) return 'Password must contain a number';
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) return 'Password must contain a special character';
+    return null;
+  };
+
+  const validatePhoneNumber = (phone: string): string | null => {
+    // Nigerian format: +234 or 0, followed by 7, 8, or 9, then 9 digits
+    if (!/^(\+234|0)[789]\d{9}$/.test(phone)) {
+      return 'Invalid Nigerian phone number. Use format: 08012345678 or +2348012345678';
+    }
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
     // Validation
-    if (!formData.email || !formData.password || !formData.confirmPassword || !formData.phone) {
+    if (!formData.email || !formData.password || !formData.confirmPassword || !formData.phone || !formData.firstName || !formData.lastName) {
       setError('Please fill in all required fields');
       return;
     }
@@ -42,13 +59,20 @@ export default function RegisterPage() {
       return;
     }
 
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters');
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setError(passwordError);
+      return;
+    }
+
+    const phoneError = validatePhoneNumber(formData.phone);
+    if (phoneError) {
+      setError(phoneError);
       return;
     }
 
     try {
-      await register(formData.email, formData.password, formData.phone);
+      await register(formData.email, formData.password, formData.phone, formData.firstName, formData.lastName);
       navigate('/onboarding');
     } catch (err: any) {
       setError(err.message || 'Registration failed');
@@ -116,12 +140,13 @@ export default function RegisterPage() {
               <Input
                 type="tel"
                 name="phone"
-                placeholder="+234..."
+                placeholder="09012345678 or +2349012345678"
                 value={formData.phone}
                 onChange={handleChange}
                 className="mt-1"
                 disabled={isLoading}
               />
+              <p className="text-xs text-slate-500 mt-1">Nigerian number: 080-089 or 070-079 networks</p>
             </div>
 
             <div>
@@ -135,7 +160,7 @@ export default function RegisterPage() {
                 className="mt-1"
                 disabled={isLoading}
               />
-              <p className="text-xs text-slate-500 mt-1">Min 8 characters</p>
+              <p className="text-xs text-slate-500 mt-2">Must contain: 12+ characters, uppercase, lowercase, number, special char (!@#$%^&* etc)</p>
             </div>
 
             <div>

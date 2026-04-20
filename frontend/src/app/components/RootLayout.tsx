@@ -38,6 +38,7 @@ export function RootLayout() {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [unreadInsights] = useState(0); // TODO: Fetch from API
 
   const handleLogout = async () => {
     await logout();

@@ -1,5 +1,6 @@
 import { Pool, PoolClient } from 'pg';
 import logger from './logger.js';
+import initializeDatabase from './initializeDatabase.js';
 
 interface PoolConfig {
   host: string;
@@ -26,16 +27,24 @@ class Database {
     }
 
     const config: PoolConfig = {
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432', 10),
-      database: process.env.DB_NAME || 'khalia_db',
+      host: process.env.DB_HOST || '127.0.0.1',
+      port: parseInt(process.env.DB_PORT || '5434', 10),
+      database: process.env.DB_NAME || 'khalia_dev',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       max: parseInt(process.env.DATABASE_POOL_MAX || '10', 10),
       min: parseInt(process.env.DATABASE_POOL_MIN || '2', 10),
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
+      connectionTimeoutMillis: 5000,
     };
+
+    logger.info('Database config', {
+      host: config.host,
+      port: config.port,
+      database: config.database,
+      user: config.user,
+      password: config.password ? '***' : '(none)',
+    });
 
     this.pool = new Pool(config);
 
@@ -56,6 +65,10 @@ class Database {
       logger.info('Database connection successful', {
         timestamp: result.rows[0].now,
       });
+
+      // Initialize tables
+      await initializeDatabase(this.query.bind(this));
+      logger.info('✅ Database tables initialized');
     } catch (error) {
       logger.error('Database connection failed', { error });
       throw error;

@@ -109,7 +109,7 @@ export default function OnboardingPage() {
 
   const handleSkipToComplete = () => {
     // After 3 steps, allow them to proceed
-    navigate('/dashboard');
+    navigate('/');
   };
 
   if (!kycStatus) {

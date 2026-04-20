@@ -56,8 +56,8 @@ async function recordAuditLog(req: RequestWithUser, res: Response, responseData:
     }
 
     const query = `
-      INSERT INTO audit_logs (action, actor_user_id, actor_type, resource_type, resource_id, created_at)
-      VALUES ($1, $2, $3, $4, $5, NOW())
+      INSERT INTO audit_logs (action, actor_id, entity_type, entity_id, ip_address, user_agent, created_at)
+      VALUES ($1, $2, $3, $4, $5, $6, NOW())
     `;
 
     await database.query(query, [

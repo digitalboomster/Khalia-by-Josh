@@ -20,6 +20,7 @@ export interface WalletBalance {
   pending_transactions: number;
   held_amount: number;
   currency: string;
+  
 }
 
 export interface DepositLinkResponse {

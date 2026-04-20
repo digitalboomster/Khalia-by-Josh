@@ -74,13 +74,15 @@ router.post(
     res.status(201).json({
       success: true,
       data: {
-        id: result.id,
-        email: result.email,
-        first_name: result.first_name,
-        last_name: result.last_name,
-        kyc_status: result.kyc_status,
-        kyc_level: result.kyc_level,
-        trust_score: result.trust_score,
+        user: {
+          id: result.id,
+          email: result.email,
+          first_name: result.first_name,
+          last_name: result.last_name,
+          kyc_status: result.kyc_status,
+          kyc_level: result.kyc_level,
+          trust_score: result.trust_score,
+        },
         access_token: result.access_token,
         refresh_token: result.refresh_token,
         expires_in: result.expires_in,
@@ -108,29 +110,31 @@ router.post(
   asyncHandler(async (req: RequestWithId, res: Response) => {
     const result = await authService.login(req.body);
 
-    res.status(200).json({
-      success: true,
-      data: {
-        id: result.id,
-        email: result.email,
-        first_name: result.first_name,
-        last_name: result.last_name,
-        kyc_status: result.kyc_status,
-        kyc_level: result.kyc_level,
-        trust_score: result.trust_score,
-        access_token: result.access_token,
-        refresh_token: result.refresh_token,
-        expires_in: result.expires_in,
-      },
-      requestId: req.id,
-    });
-
-    // Set HTTP-only refresh cookie
+    // Set HTTP-only refresh cookie BEFORE sending response
     res.cookie('refresh_token', result.refresh_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        user: {
+          id: result.id,
+          email: result.email,
+          first_name: result.first_name,
+          last_name: result.last_name,
+          kyc_status: result.kyc_status,
+          kyc_level: result.kyc_level,
+          trust_score: result.trust_score,
+        },
+        access_token: result.access_token,
+        refresh_token: result.refresh_token,
+        expires_in: result.expires_in,
+      },
+      requestId: req.id,
     });
   }),
 );

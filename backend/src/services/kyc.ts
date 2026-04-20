@@ -198,9 +198,8 @@ class KYCService {
       const result = await database.query(
         `SELECT 
           kyc_status, kyc_level, 
-          email_verified AS is_email_verified,
-          bank_account_verified AS is_bank_verified,
-          aml_risk_level
+          aml_risk_level,
+          created_at
         FROM users WHERE id = $1`,
         [userId],
       );
@@ -230,16 +229,16 @@ class KYCService {
       if (user.kyc_level === 5) nextStep = 'KYC Complete';
 
       return {
-        kyc_status: user.kyc_status,
-        kyc_level: user.kyc_level,
+        status: user.kyc_status,
+        level: user.kyc_level,
         completion_percentage: completionPercentage,
         next_step: nextStep,
         requirements: {
-          email_verified: user.is_email_verified || true,
+          email_verified: user.kyc_level >= 1,
           phone_verified: user.kyc_level >= 2,
           bvn_verified: user.kyc_level >= 3,
           biometric_verified: user.kyc_level >= 4,
-          bank_verified: user.is_bank_verified || false,
+          bank_verified: user.kyc_level >= 4,
         },
         aml_risk_level: user.aml_risk_level,
       };
@@ -304,7 +303,7 @@ class KYCService {
   private async recordAuditLog(action: string, userId: string, resource: string): Promise<void> {
     try {
       await database.query(
-        `INSERT INTO audit_logs (action, actor_user_id, actor_type, resource_type, created_at)
+        `INSERT INTO audit_logs (action, actor_id, entity_type, entity_id, created_at)
          VALUES ($1, $2, $3, $4, NOW())`,
         [action, userId, 'user', resource],
       );

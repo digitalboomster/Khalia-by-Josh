@@ -15,7 +15,7 @@ export interface AuthContextType {
 
   // Methods
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, phone: string) => Promise<void>;
+  register: (email: string, password: string, phone: string, firstName?: string, lastName?: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -80,12 +80,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (email: string, password: string, phone: string): Promise<void> => {
+  const register = async (email: string, password: string, phone: string, firstName?: string, lastName?: string): Promise<void> => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response: AuthResponse = await authService.register({ email, password, phone });
+      const response: AuthResponse = await authService.register({ 
+        email, 
+        password, 
+        phone_number: phone,
+        first_name: firstName,
+        last_name: lastName,
+      });
       authService.setTokens(response.access_token, response.refresh_token);
       setUser(response.user);
     } catch (err: any) {

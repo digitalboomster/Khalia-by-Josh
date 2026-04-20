@@ -8,14 +8,11 @@ import apiClient from './api-client';
 export interface User {
   id: string;
   email: string;
-  phone: string;
   first_name?: string;
   last_name?: string;
   kyc_level: number;
   kyc_status: string;
   trust_score: number;
-  aml_risk_level: string;
-  created_at: string;
 }
 
 export interface AuthResponse {
@@ -28,7 +25,7 @@ export interface AuthResponse {
 export interface RegisterPayload {
   email: string;
   password: string;
-  phone: string;
+  phone_number: string;
   first_name?: string;
   last_name?: string;
 }

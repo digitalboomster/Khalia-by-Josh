@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model audit_logs {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  action      String    @db.VarChar(100)
+  entity_type String?   @db.VarChar(100)
+  entity_id   String?   @db.Uuid
+  actor_id    String?   @db.Uuid
+  changes     Json?
+  ip_address  String?   @db.VarChar(45)
+  user_agent  String?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+
+  @@index([actor_id], map: "idx_audit_logs_actor_id")
+  @@index([created_at], map: "idx_audit_logs_created_at")
+}
+
+model contributions {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  group_id     String    @db.Uuid
+  user_id      String    @db.Uuid
+  amount_naira Decimal   @db.Decimal(15, 2)
+  due_date     DateTime  @db.Timestamp(6)
+  paid_at      DateTime? @db.Timestamp(6)
+  status       String?   @default("pending") @db.VarChar(50)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  groups       groups    @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users        users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([due_date], map: "idx_contributions_due_date")
+  @@index([group_id], map: "idx_contributions_group_id")
+  @@index([user_id], map: "idx_contributions_user_id")
+}
+
+model group_members {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  group_id  String    @db.Uuid
+  user_id   String    @db.Uuid
+  role      String?   @default("member") @db.VarChar(50)
+  joined_at DateTime? @default(now()) @db.Timestamp(6)
+  groups    groups    @relation(fields: [group_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users     users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([group_id, user_id])
+  @@index([group_id], map: "idx_group_members_group_id")
+  @@index([user_id], map: "idx_group_members_user_id")
+}
+
+model groups {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String          @db.VarChar(255)
+  description   String?
+  founder_id    String          @db.Uuid
+  target_amount Decimal?        @default(0) @db.Decimal(15, 2)
+  frequency     String?         @default("monthly") @db.VarChar(50)
+  next_due      DateTime?       @db.Timestamp(6)
+  status        String?         @default("active") @db.VarChar(50)
+  created_at    DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?       @default(now()) @db.Timestamp(6)
+  deleted_at    DateTime?       @db.Timestamp(6)
+  contributions contributions[]
+  group_members group_members[]
+  users         users           @relation(fields: [founder_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([founder_id], map: "idx_groups_founder_id")
+  @@index([status], map: "idx_groups_status")
+}
+
+model ledger_entries {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String    @db.Uuid
+  account_type      String    @db.VarChar(100)
+  debit_credit_type String    @db.VarChar(10)
+  amount_naira      Decimal   @db.Decimal(15, 2)
+  description       String?
+  reference_id      String?   @db.Uuid
+  created_at        DateTime? @default(now()) @db.Timestamp(6)
+  users             users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([account_type], map: "idx_ledger_account_type")
+  @@index([created_at], map: "idx_ledger_created_at")
+  @@index([user_id], map: "idx_ledger_user_id")
+}
+
+model transactions {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id      String    @db.Uuid
+  type         String    @db.VarChar(50)
+  amount_naira Decimal   @db.Decimal(15, 2)
+  status       String?   @default("pending") @db.VarChar(50)
+  description  String?
+  reference_id String?   @db.Uuid
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  updated_at   DateTime? @default(now()) @db.Timestamp(6)
+  users        users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([created_at], map: "idx_transactions_created_at")
+  @@index([status], map: "idx_transactions_status")
+  @@index([user_id], map: "idx_transactions_user_id")
+}
+
+model users {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email           String           @unique @db.VarChar(255)
+  phone_number    String           @unique @db.VarChar(20)
+  password_hash   String           @db.VarChar(255)
+  first_name      String?          @db.VarChar(100)
+  last_name       String?          @db.VarChar(100)
+  kyc_status      String?          @default("not_started") @db.VarChar(50)
+  kyc_level       Int?             @default(1)
+  kyc_verified_at DateTime?        @db.Timestamp(6)
+  trust_score     Decimal?         @default(20.00) @db.Decimal(5, 2)
+  aml_risk_level  String?          @default("low") @db.VarChar(50)
+  created_at      DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at      DateTime?        @default(now()) @db.Timestamp(6)
+  deleted_at      DateTime?        @db.Timestamp(6)
+  contributions   contributions[]
+  group_members   group_members[]
+  groups          groups[]
+  ledger_entries  ledger_entries[]
+  transactions    transactions[]
+
+  @@index([email], map: "idx_users_email")
+  @@index([phone_number], map: "idx_users_phone_number")
+}

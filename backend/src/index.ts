@@ -18,15 +18,33 @@ async function startServer(): Promise<void> {
       host: HOST,
     });
 
-    // Initialize database
+    // Initialize database (optional in development)
     logger.info('📊 Initializing database connection...');
-    await database.initialize();
-    logger.info('✅ Database initialized');
+    try {
+      await database.initialize();
+      logger.info('✅ Database initialized');
+    } catch (dbError) {
+      if (process.env.NODE_ENV === 'development') {
+        logger.warn('⚠️ Database connection failed (running in development mode without DB)');
+        logger.warn('Database features will not be available');
+      } else {
+        throw dbError;
+      }
+    }
 
-    // Initialize Redis
+    // Initialize Redis (optional in development)
     logger.info('💾 Initializing Redis cache...');
-    await redis.initialize();
-    logger.info('✅ Redis initialized');
+    try {
+      await redis.initialize();
+      logger.info('✅ Redis initialized');
+    } catch (redisError) {
+      if (process.env.NODE_ENV === 'development') {
+        logger.warn('⚠️ Redis connection failed (running in development mode without Redis)');
+        logger.warn('Caching features will not be available');
+      } else {
+        throw redisError;
+      }
+    }
 
     // Start HTTP server
     const server = app.listen(PORT, HOST, () => {

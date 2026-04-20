@@ -18,10 +18,6 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
 } from "recharts";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Legend,
-} from "recharts";
 
 // ─── Wellness Radial ──────────────────────────────────────────────────────────
 function WellnessMeter({ score }: { score: number }) {
@@ -109,16 +105,9 @@ function ActivityRow({ item }: { item: { type: string; message: string; timestam
 }
 
 // ─── Group Health Pinwheel ────────────────────────────────────────────────────
-function GroupHealthCard({ group }: { group: typeof userGroups[0] }) {
-  const score = group.wellnessScore ?? 75;
+function GroupHealthCard({ group }: { group: Group }) {
+  const score = 75; // Default score since Group interface doesn't have wellnessScore
   const color = score >= 85 ? "#10b981" : score >= 70 ? "#f59e0b" : "#ef4444";
-  const typeColors: Record<string, string> = {
-    rosca: "bg-blue-100 text-blue-700",
-    savings: "bg-purple-100 text-purple-700",
-    investment: "bg-amber-100 text-amber-700",
-    "co-buying": "bg-emerald-100 text-emerald-700",
-  };
-  const typeLabels: Record<string, string> = { rosca: "ROSCA", savings: "Savings", investment: "Investment", "co-buying": "Co-Ownership" };
 
   return (
     <Link to={`/groups/${group.id}`} className="block">
@@ -141,22 +130,15 @@ function GroupHealthCard({ group }: { group: typeof userGroups[0] }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
             <span className="font-medium text-sm truncate">{group.name}</span>
-            <Badge className={`text-[10px] px-1.5 py-0 h-4 border-0 ${typeColors[group.type]}`}>{typeLabels[group.type]}</Badge>
+            <Badge className="text-[10px] px-1.5 py-0 h-4 border-0 bg-blue-100 text-blue-700">{group.status}</Badge>
           </div>
           <div className="flex items-center gap-3 text-xs text-gray-500">
-            <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {group.members}</span>
-            {group.contributionStreak && (
-              <span className="flex items-center gap-1 text-orange-500"><Flame className="w-3 h-3" /> {group.contributionStreak}mo</span>
-            )}
-            {group.goalProgress && (
-              <span className="text-emerald-600 font-medium">{group.goalProgress}% to goal</span>
-            )}
+            <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {group.member_count}</span>
+            <span className="flex items-center gap-1">₦{group.contribution_amount.toLocaleString()} {group.contribution_frequency}</span>
           </div>
-          {group.goalProgress !== undefined && (
-            <div className="mt-1.5 h-1 bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full" style={{ width: `${group.goalProgress}%` }} />
-            </div>
-          )}
+          <div className="mt-1.5 h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full" style={{ width: `${(group.member_count / group.max_members) * 100}%` }} />
+          </div>
         </div>
         <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 flex-shrink-0" />
       </div>
@@ -175,6 +157,8 @@ export function Dashboard() {
   const [userGroups, setUserGroups] = useState<Group[]>([]);
   const [kycStatus, setKycStatus] = useState<KYCStatus | null>(null);
   const [trustScore, setTrustScore] = useState<TrustScoreBreakdown | null>(null);
+  const [topInsight, setTopInsight] = useState<{ body: string } | null>(null);
+  const [nextPayout, setNextPayout] = useState<{ totalPool: number; nextPayout: string } | null>(null);
 
   // Fetch all dashboard data on mount
   useEffect(() => {
@@ -229,6 +213,9 @@ export function Dashboard() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
   
+  // Calculate total group contributions
+  const totalGroupContributions = (Array.isArray(userGroups) ? userGroups : []).reduce((sum, group) => sum + (group.contribution_amount * group.member_count || 0), 0);
+  
   // Mock performance data
   const performanceData = [
     { month: 'Jan', value: 45000, benchmark: 40000 },
@@ -257,23 +244,23 @@ export function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-white font-semibold text-xl shadow-sm flex-shrink-0">
-            {currentUser.name.charAt(0)}
+            {user?.name?.charAt(0) || 'U'}
           </div>
           <div>
             <p className="text-gray-500 text-sm">{greeting} 👋</p>
-            <h1 className="leading-tight">{currentUser.name}</h1>
+            <h1 className="leading-tight">{user?.name || 'User'}</h1>
             <div className="flex items-center gap-2 mt-1">
               <Badge className="text-[10px] bg-emerald-100 text-emerald-700 border-0">
                 <CheckCircle2 className="w-3 h-3 mr-1" /> Verified Member
               </Badge>
-              {currentUser.badges?.slice(0, 1).map((b) => (
+              {user?.badges?.slice(0, 1).map((b: boolean | React.Key | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | null | undefined) => (
                 <Badge key={b} variant="outline" className="text-[10px]">{b}</Badge>
               ))}
             </div>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <WellnessMeter score={currentUser.wellnessScore ?? 84} />
+          <WellnessMeter score={user?.wellnessScore ?? 84} />
           <div className="hidden sm:block text-right">
             <div className="text-xs text-gray-500">Financial Wellness</div>
             <div className="text-xs text-gray-400">Your personal score</div>
@@ -282,8 +269,8 @@ export function Dashboard() {
       </div>
 
       {/* Streak Banner */}
-      {currentUser.contributionStreak && currentUser.contributionStreak > 0 && (
-        <StreakBanner streak={currentUser.contributionStreak} />
+      {user?.contributionStreak && user.contributionStreak > 0 && (
+        <StreakBanner streak={user.contributionStreak} />
       )}
 
       {/* ShūrāBot Proactive Insight */}
@@ -315,8 +302,14 @@ export function Dashboard() {
             <DollarSign className="w-4 h-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="font-semibold">₦{walletBalance.ngn.toLocaleString()}</div>
-            <p className="text-xs text-gray-500 mt-1">${walletBalance.usd.toLocaleString()} USD</p>
+            {walletBalance ? (
+              <>
+                <div className="font-semibold">₦{walletBalance.available_balance.toLocaleString()}</div>
+                <p className="text-xs text-gray-500 mt-1">{walletBalance.pending_transactions > 0 ? `₦${walletBalance.pending_transactions.toLocaleString()} pending` : 'No pending transactions'}</p>
+              </>
+            ) : (
+              <div className="text-sm text-gray-500">Loading balance...</div>
+            )}
           </CardContent>
         </Card>
 
@@ -326,7 +319,7 @@ export function Dashboard() {
             <Users className="w-4 h-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="font-semibold">₦{totalGroupContributions.toLocaleString()}</div>
+            <div className="font-semibold">₦{totalGroupContributions?.toLocaleString() || '0'}</div>
             <p className="text-xs text-emerald-600 mt-1 flex items-center gap-1">
               <ArrowUpRight className="w-3 h-3" /> 8.5% this month
             </p>
@@ -339,9 +332,9 @@ export function Dashboard() {
             <Users className="w-4 h-4 text-gray-400" />
           </CardHeader>
           <CardContent>
-            <div className="font-semibold">{userGroups.length}</div>
+            <div className="font-semibold">{Array.isArray(userGroups) ? userGroups.length : 0}</div>
             <p className="text-xs text-gray-500 mt-1">
-              {userGroups.filter((g) => g.type === "investment").length} investment circles
+              {(Array.isArray(userGroups) ? userGroups : []).filter((g) => g.payout_strategy === "proportional").length} active circles
             </p>
           </CardContent>
         </Card>
@@ -380,7 +373,7 @@ export function Dashboard() {
               <YAxis stroke="#9ca3af" fontSize={12} />
               <Tooltip
                 contentStyle={{ backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "8px" }}
-                formatter={(value: number) => [`₦${value.toLocaleString()}`, ""]}
+                formatter={(value: any) => [`₦${(value || 0).toLocaleString()}`, ""]}
               />
               <Legend />
               <Line type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2.5} name="Your Portfolio" dot={{ r: 4, fill: "#10b981" }} />
@@ -404,7 +397,7 @@ export function Dashboard() {
             </Link>
           </CardHeader>
           <CardContent className="space-y-2">
-            {userGroups.map((group) => (
+            {(Array.isArray(userGroups) ? userGroups : []).map((group) => (
               <GroupHealthCard key={group.id} group={group} />
             ))}
           </CardContent>
@@ -460,7 +453,7 @@ export function Dashboard() {
                 </div>
                 <div className={`font-medium text-sm ${tx.type === "contribution" || tx.type === "investment" ? "text-red-600" : "text-green-600"}`}>
                   {tx.type === "contribution" || tx.type === "investment" ? "-" : "+"}
-                  ₦{tx.amount.toLocaleString()}
+                  ₦{(tx.amount || 0).toLocaleString()}
                 </div>
               </div>
             ))}

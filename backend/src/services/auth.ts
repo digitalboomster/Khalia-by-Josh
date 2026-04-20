@@ -340,7 +340,7 @@ class AuthService {
   ): Promise<void> {
     try {
       await database.query(
-        `INSERT INTO audit_logs (action, actor_user_id, actor_type, created_at)
+        `INSERT INTO audit_logs (action, actor_id, entity_type, created_at)
          VALUES ($1, $2, $3, NOW())`,
         [action, userId, actorType],
       );
