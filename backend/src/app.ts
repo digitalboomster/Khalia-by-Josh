@@ -10,14 +10,9 @@ import errorHandlerMiddleware from '@middleware/errorHandler';
 import authMiddleware from '@middleware/auth';
 import auditLoggingMiddleware from '@middleware/auditLog';
 
-// Routes (to be implemented)
+// Routes
 import authRoutes from '@routes/auth';
-// import walletRoutes from '@routes/wallet';
-// import groupRoutes from '@routes/groups';
-// import contributionRoutes from '@routes/contributions';
-// import payoutRoutes from '@routes/payouts';
-// import adminRoutes from '@routes/admin';
-// import webhookRoutes from '@routes/webhooks';
+import apiRoutes from '@routes/api';
 
 // Types
 interface RequestWithId extends Request {
@@ -106,18 +101,14 @@ app.get('/health', (req: RequestWithId, res: Response) => {
 // Public auth routes (no auth required)
 app.use('/api/v1/auth', authRoutes);
 
+// Audit logging for protected routes
+app.use('/api/v1/', auditLoggingMiddleware);
+
 // Protected routes (require auth token)
 app.use('/api/v1/', authMiddleware);
 
-// TODO: Mount protected routes
-// app.use('/api/v1/wallet', walletRoutes);
-// app.use('/api/v1/groups', groupRoutes);
-// app.use('/api/v1', contributionRoutes);
-// app.use('/api/v1', payoutRoutes);
-// app.use('/api/v1/admin', adminRoutes);
-
-// Webhooks (public, but signature-verified)
-// app.use('/webhooks', webhookRoutes);
+// Mount all API routes (KYC, Wallet, Groups, Notifications, Admin, etc.)
+app.use('/api/v1/', apiRoutes);
 
 /**
  * 404 Handler
