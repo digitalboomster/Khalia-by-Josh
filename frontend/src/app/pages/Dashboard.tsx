@@ -244,11 +244,11 @@ export function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-white font-semibold text-xl shadow-sm flex-shrink-0">
-            {user?.first_name?.charAt(0) || 'U'}
+            {user?.name?.charAt(0) || 'U'}
           </div>
           <div>
             <p className="text-gray-500 text-sm">{greeting} 👋</p>
-            <h1 className="leading-tight">{user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : user?.first_name || 'User'}</h1>
+            <h1 className="leading-tight">{user?.name || 'User'}</h1>
             <div className="flex items-center gap-2 mt-1">
               <Badge className="text-[10px] bg-emerald-100 text-emerald-700 border-0">
                 <CheckCircle2 className="w-3 h-3 mr-1" /> Verified Member
